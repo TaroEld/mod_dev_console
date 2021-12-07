@@ -1,0 +1,106 @@
+
+.l-dialog-container-mod .ui-control.dialog
+{
+    background-color: rgba(0, 0, 0, 0.3);
+
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index : 1;
+}
+
+.l-dialog-container-mod
+{
+    height: 100%;
+    width: 100%;
+    position: relative;
+    background-image: url("coui://gfx/ui/skin/dialog_background_01.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+
+.l-dialog-container-mod .row
+{
+    width: 95%;
+    height: 5.9rem;
+    position: relative;
+    float: left;
+}
+
+.l-dialog-container-mod .row .label
+{
+    width: 9%;
+    height: 5.9rem;
+    margin-right: 1.0rem;
+    position: relative;
+    float: left;
+
+    line-height: 5.9rem;
+    text-align: right;
+}
+
+.l-dialog-container-mod .row .l-input
+{
+    width: 90%;
+    height: 4.0rem;
+    margin-top: 1.0rem;
+    margin-bottom: 1.0rem;
+    position: relative;
+    float: left;
+}
+
+.l-dialog-container-mod .footer
+{
+    width: 100%;
+    height: 6.0rem;
+    position: relative;
+    float: left;
+}
+
+.l-dialog-container-mod .footer .l-button-bar
+{
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100.0rem;
+    height: 4.3rem;
+    position: absolute;
+    margin: auto;
+}
+
+.l-dialog-container-mod .l-cancel-button
+{
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 23.0rem;
+    position: relative;
+    margin-left: 3.0rem;
+    float: left;
+    text-align: center;
+    line-height: 3.0rem;
+}
+
+.l-dialog-container-mod .l-ok-button
+{
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 23.0rem;
+    position: relative;
+    float: left;
+    text-align: center;
+    line-height: 3.0rem;
+}
+
+.custom-input-width
+{
+    background-size: 100% 4.0rem !important;
+}
+
