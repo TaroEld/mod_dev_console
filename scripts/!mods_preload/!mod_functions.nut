@@ -1,43 +1,9 @@
 //library of useful functions
 
 
-::setupDebugLog <- function (_enabled = false, _name = "default")
-{
-	local gt = this.getroottable()
-	//keep table of mod names so that you can turn it on and off for specific mods
-	if (!("debugLog" in gt)){
-		gt.debugLog <- {}
-	}
-	if (!(_name in gt.debugLog))
-	{
-		gt.debugLog[_name] <- false
-	}
-	gt.debugLog[_name] <- _enabled
-	if (gt.debugLog[_name]) this.logInfo("debug log set to true for " + _name)
-
-	gt.printDebug <- function(arg = "No argument for debug log", _name = "default")
-	{
-		if (_name in this.debugLog && this.debugLog[_name]){
-			local src = getstackinfos(2).src.slice(0, -4)
-			src = split(src, "/")[split(src, "/").len()-1]
-			this.logInfo(_name +  " " + src + " : " + arg)
-		}
-	}
-	gt.isDebug <- function(_str)
-	{
-		return (_str in this.debugLog && this.debugLog[_str])
-	}
-}
 ::logConsole <- function(_text = "", _log = true)
 {
-	if (this.Tactical.isActive()){
-		if(this.Tactical.State.m.DevConsoleScreen.isVisible()) this.Tactical.State.m.DevConsoleScreen.log(_text)
-	}
-	else{
-		if(this.World.State.m.DevConsoleScreen.isVisible()) this.World.State.m.DevConsoleScreen.log(_text)
-	}
-	
-	if (_log) this.logInfo("logConsole: " + _text)
+	this.DevConsole.DevConsoleScreen.log(_text)
 }
 
 //print out an array or table. _maxDepth defines the recursion level.  _console = true prints to console only
@@ -123,10 +89,10 @@ this.getroottable().Math.randArray <- function(_array){
 	    	::logConsole("Next unit to spawn: " + unit )
 	    	local gt = this.getroottable()
 
-	    	gt.DevConsole.SpawnUnit.SpawnUnitScript = unit
-    		if (_faction == "player") gt.DevConsole.SpawnUnit.SpawnUnitFaction = this.Const.Faction.Player
-    		else if (_faction == "enemy") gt.DevConsole.SpawnUnit.SpawnUnitFaction = this.Const.Faction.Enemy
-    		else gt.DevConsole.SpawnUnit.SpawnUnitFaction = _faction
+	    	gt.DevConsole.m.SpawnUnit.SpawnUnitScript = unit
+    		if (_faction == "player") gt.DevConsole.m.SpawnUnit.SpawnUnitFaction = this.Const.Faction.Player
+    		else if (_faction == "enemy") gt.DevConsole.m.SpawnUnit.SpawnUnitFaction = this.Const.Faction.Enemy
+    		else gt.DevConsole.m.SpawnUnit.SpawnUnitFaction = _faction
 	    	return
 	    }
 	}

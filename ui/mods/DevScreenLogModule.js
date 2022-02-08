@@ -233,7 +233,6 @@ DevScreenLogModule.prototype.clearConsole = function ()
 };
 DevScreenLogModule.prototype.insertCommand = function (_command)
 {
-	console.error(_command)
 	this.mLatestCommandIndex += 1
 	this.mLatestCommandArray.push(_command)
 };
