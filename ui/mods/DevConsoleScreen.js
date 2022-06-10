@@ -1,84 +1,41 @@
-/*
- *  @Project:       Battle Brothers
- *  @Company:       Overhype Studios
- *
- *  @Copyright:     (c) Overhype Studios | 2013 - 2020
- * 
- *  @Author:        Overhype Studios
- *  @Date:          31.10.2017
- *  @Description:   World Town Screen JS
- */
 "use strict";
 
-
+// var console_error = console.error;
+// console.error = function(args)
+// {
+// 	console_error(args);
+// 	if (Screens.DevConsoleScreen) Screens.DevConsoleScreen.log({Text : arguments[0], Type : "error"})
+// }
 
 var DevConsoleScreen = function(_parent)
 {
-
-    this.mSQHandle = null;
+    MSUUIScreen.call(this);
+    this.mModID = "mod_dev_console"
+    this.mID = "DevConsoleScreen";
     this.mContainer = null;
     this.mDialogContainer = null;
-    this.mLogModule = null;
-    this.mIsVisible = false;
 
-    this.createModules();
+    this.mInputCommandContainer = null;
+    this.mInputArgumentContainer = null;
 
+    this.mOutputContainer = null;
+    this.mOutputScrollContainer = null;
+    this.mCurrentEntries = [];
+
+    this.mLatestCommandArray = [];
+    this.mLatestCommandIndex = 0;
+
+    // constants
+    this.mMaxVisibleEntries = 1000;
+    this.mEnvironment = true;
 }
 
-
-DevConsoleScreen.prototype.isConnected = function ()
-{
-    return this.mSQHandle !== null;
-};
-
-DevConsoleScreen.prototype.onConnection = function (_handle)
-{
-    this.mSQHandle = _handle;
-    this.register($('.root-screen'));
-};
-
-DevConsoleScreen.prototype.onDisconnection = function ()
-{
-    
-    this.mLogModule.onDisconnection();
-    this.mSQHandle = null;
-    this.unregister();
-};
-
-DevConsoleScreen.prototype.onModuleOnConnectionCalled = function (_module)
-{
-    // check if every module is connected
-    if (this.mDialogContainer !== null && this.mDialogContainer.isConnected())
-    {
-        this.notifyBackendOnConnected();
-    }
-};
-
-DevConsoleScreen.prototype.onModuleOnDisconnectionCalled = function (_module)
-{
-    // check if every module is disconnected
-    if (this.mDialogContainer === null && !this.mDialogContainer.isConnected())
-    {
-        this.notifyBackendOnDisconnected();
-    }
-};
-
-DevConsoleScreen.prototype.createModules = function()
-{
-    this.mLogModule = new DevScreenLogModule();
-    this.mLogModule.registerEventListener(this);
-
-};
-
-DevConsoleScreen.prototype.registerModules = function ()
-{
-    this.mLogModule.register(this.mDialogContainer.findDialogContentContainer());
-};
-
-DevConsoleScreen.prototype.unregisterModules = function ()
-{
-    this.mLogModule.unregister();
-};
+DevConsoleScreen.prototype = Object.create(MSUUIScreen.prototype);
+Object.defineProperty(DevConsoleScreen.prototype, 'constructor', {
+    value: DevConsoleScreen,
+    enumerable: false,
+    writable: true
+});
 
 DevConsoleScreen.prototype.createDIV = function (_parentDiv)
 {
@@ -92,6 +49,7 @@ DevConsoleScreen.prototype.createDIV = function (_parentDiv)
     var dialogLayout = $('<div class="l-dialog-container-mod"/>');
     this.mContainer.append(dialogLayout);
     this.mDialogContainer = dialogLayout.createDialog('Mod Console', null, null, false);
+    this.mDialogContentContainer = this.mDialogContainer.findDialogContentContainer();
 
     // create footer button bar
     var footerButtonBar = $('<div class="l-button-bar"></div>');
@@ -102,14 +60,14 @@ DevConsoleScreen.prototype.createDIV = function (_parentDiv)
     footerButtonBar.append(layout);
     var button = layout.createTextButton("Run", function ()
     {
-        self.notifyBackendOkButtonPressed();
+        self.checkRunCommand();
     }, '', 4);
 
     var layout = $('<div class="l-ok-button"/>');
     footerButtonBar.append(layout);
     button = layout.createTextButton("Run in console", function ()
     {
-        self.notifyBackendOkInConsoleButtonPressed();
+        self.checkRunCommand(true);
     }, '', 4);
 
      var layout = $('<div class="l-ok-button"/>');
@@ -118,20 +76,75 @@ DevConsoleScreen.prototype.createDIV = function (_parentDiv)
     {
         self.clearConsole();
     }, '', 4);
+
+    var layout = $('<div class="l-ok-button"/>');
+    footerButtonBar.append(layout);
+    this.mEnvButton = layout.createTextButton("Squirrel", function ()
+    {
+        self.setEnvironment(!self.mEnvironment);
+    }, '', 4);
     
-    var layout = $('<div class="l-cancel-button"/>');
+    var layout = $('<div class="l-ok-button"/>');
     footerButtonBar.append(layout);
     this.mNoButton = layout.createTextButton("Cancel", function ()
     {
-        self.notifyBackendCancelButtonPressed();
+        self.notifyBackendHide();
     }, '', 4);
 
     this.mIsVisible = false;
+    this.createLogContent()
 };
 
+DevConsoleScreen.prototype.createLogContent = function ()
+{
+    var self = this;
+
+    // create: container
+    this.mLogModule = $('<div class="mod-log-module"/>');
+    this.mDialogContentContainer.append(this.mLogModule);
+
+    var row = $('<div class="row"/>');
+    this.mLogModule.append(row);
+    var label = $('<div class="label text-font-normal font-color-label font-bottom-shadow">Command</div>');
+    row.append(label);
+
+    var inputLayout = $('<div class="l-input"/>');
+    row.append(inputLayout);
+    this.mInputCommandContainer = inputLayout.mod_createInput('', 0, 10000, 1, null, 'text-font-small font-color-brother-name custom-input-width');
+    this.mInputCommandContainer.on("keydown", function(_event){
+        if (MSU.Keybinds.isKeybindPressed(self.mModID, "Run", _event))
+        {
+            self.checkRunCommand();
+            _event.stopImmediatePropagation();
+            return false
+        }
+
+        if (MSU.Keybinds.isKeybindPressed(self.mModID, "RunInConsole", _event))
+        {
+            self.checkRunCommand(_true);
+            _event.stopImmediatePropagation();
+            return false
+        }
+    })
+
+    // create: log container
+    var eventLogsContainerLayout = $('<div class="mod-logs-container"/>');
+    this.mLogModule.append(eventLogsContainerLayout);
+    this.mOutputContainer = eventLogsContainerLayout.createList(2);
+    this.mOutputContainer.css("background-color", "rgba(" + MSU.getSettingValue(this.mModID, "BackgroundColor") + ")");
+    this.mOutputScrollContainer = this.mOutputContainer.findListScrollContainer();
+};
 
 DevConsoleScreen.prototype.destroyDIV = function ()
 {
+    this.mOutputScrollContainer.empty();
+    this.mOutputScrollContainer = null;
+    this.mOutputContainer.destroyList();
+    this.mOutputContainer.remove();
+    this.mOutputContainer = null;
+
+    this.mInputCommandContainer.empty();
+    this.mInputCommandContainer = null;
 
     if (this.mContentContainer != null){
         this.mContentContainer.remove();
@@ -147,183 +160,142 @@ DevConsoleScreen.prototype.destroyDIV = function ()
     this.mContainer = null;
 };
 
-
-DevConsoleScreen.prototype.create = function(_parentDiv)
+DevConsoleScreen.prototype.setEnvironment = function (_env)
 {
-    this.createDIV(_parentDiv);
-    this.registerModules();
-};
-
-DevConsoleScreen.prototype.destroy = function()
-{
-    this.unregisterModules();
-    this.destroyDIV();
-};
-
-
-DevConsoleScreen.prototype.register = function (_parentDiv)
-{
-    console.log('DevConSoleScreen::REGISTER');
-
-    if(this.mContainer !== null)
+    this.mEnvironment = _env;
+    if(this.mEnvironment)
     {
-        console.error('ERROR: Failed to register Dev Console Screen. Reason: Dev Console Screen is already initialized.');
-        return;
+    	this.mInputCommandContainer.removeClass("font-color-JS").addClass("font-color-brother-name")
+        this.mEnvButton.changeButtonText("Squirrel");
     }
-
-    if(_parentDiv !== null && typeof(_parentDiv) == 'object')
+    else
     {
-        this.create(_parentDiv);
+    	this.mInputCommandContainer.removeClass("font-color-brother-name").addClass("font-color-JS")
+        this.mEnvButton.changeButtonText("JavaScript");
     }
-};
-
-DevConsoleScreen.prototype.unregister = function ()
-{
-    console.log('DevConsoleScreen::UNREGISTER');
-
-    if(this.mContainer === null)
-    {
-        console.error('ERROR: Failed to unregister Dev Console Screen. Reason: Dev Console Screen is not initialized.');
-        return;
-    }
-
-    this.destroy();
-};
-
-DevConsoleScreen.prototype.show = function (_data)
-{
-    var self = this;
-    this.mContainer.velocity("finish", true).velocity({ opacity: 1 },
-    {
-        duration: 0,
-        easing: 'swing',
-        begin: function ()
-        {
-            $(this).css({ opacity: 0 });
-            $(this).removeClass('display-none').addClass('display-block');
-            self.notifyBackendOnAnimating();
-        },
-        complete: function ()
-        {
-            self.mIsVisible = true;
-            self.notifyBackendOnShown();
-            self.mDialogContainer.find('input')[0].focus();
-        }
-    });
-};
-DevConsoleScreen.prototype.changeLatestInput = function (_data)
-{
-    this.mLogModule.changeLatestInput(_data)
-};
-
-DevConsoleScreen.prototype.log = function(_data)
-{
-    this.mLogModule.log(_data)
 }
+
+DevConsoleScreen.prototype.updateColorSettings = function ()
+{
+    this.mOutputContainer.css("background-color", "rgba(" + MSU.getSettingValue(this.mModID, "BackgroundColor") + ")");
+    this.mCurrentEntries.forEach($.proxy(function(_entry){
+        _entry.css("color", "rgba(" + MSU.getSettingValue(this.mModID, _entry.data("type")) + ")");
+    }, this))
+}
+
+DevConsoleScreen.prototype.log = function(_message)
+{
+    var entry = this.createEventLogEntryDIV(_message.Text, _message.Type);
+    if (entry !== null)
+    {
+        if (this.mOutputScrollContainer.children().length > this.mMaxVisibleEntries)
+        {
+            var firstDiv = this.mOutputScrollContainer.children(':first');
+            if (firstDiv.length > 0)
+            {
+                firstDiv.remove();
+            }
+        }
+        this.mOutputScrollContainer.append(entry);
+        this.mCurrentEntries.push(entry);
+        // this.mOutputContainer.scrollListToBottom();
+    }
+}
+
+DevConsoleScreen.prototype.createEventLogEntryDIV = function (_text, _type)
+{
+    if (_text === null || typeof(_text) != 'string')
+    {
+        return null;
+    }
+
+    var entry = $('<div class="log-entry text-font-small"></div>');
+    entry.data("type", _type);
+    entry.css("color", "rgba(" + MSU.getSettingValue(this.mModID, _type) + ")");
+    var parsedText = XBBCODE.process({
+        text: _text,
+        removeMisalignedTags: false,
+        addInLineBreaks: true
+    });
+
+    entry.html(parsedText.html);
+    return entry;
+};
+
 DevConsoleScreen.prototype.clearConsole = function()
 {
-    this.mLogModule.clearConsole()
+    this.mInputCommandContainer.val('');
+    this.mOutputScrollContainer.empty();
+    this.mCurrentEntries = [];
+    this.mInputCommandContainer.focus();
 }
 
-DevConsoleScreen.prototype.hide = function ()
+DevConsoleScreen.prototype.insertCommand = function (_command)
 {
-    this.mLogModule.clearConsole();
-    var self = this;
-    this.mContainer.velocity("finish", true).velocity({ opacity: 0 },
-    {
-        duration: 0,
-        easing: 'swing',
-        begin: function()
-        {
-            self.notifyBackendOnAnimating();
-        },
-        complete: function()
-        {
-            self.mIsVisible = false;
-            $(this).css({ opacity: 0 });
-            $(this).removeClass('display-block').addClass('display-none');
-            self.notifyBackendOnHidden();
-        }
-    });
+    this.mLatestCommandIndex += 1
+    this.mLatestCommandArray.push([_command, this.mEnvironment])
 };
 
-DevConsoleScreen.prototype.notifyBackendOkButtonPressed = function ()
+DevConsoleScreen.prototype.changeLatestInput = function (_data)
 {
-    if (this.mSQHandle !== null)
+    var currentLen = this.mLatestCommandArray.length
+    var previousLen = this.mLatestCommandIndex
+    var nextLen = previousLen + _data
+    if (nextLen < 0 || nextLen >= currentLen)
     {
-        var inputFields = this.mDialogContainer.find('input');
-        SQ.call(this.mSQHandle, 'onOkButtonPressed', [ $(inputFields[0]).getInputText(),  $(inputFields[1]).getInputText()]);
+        return false
     }
-};
+    this.mLatestCommandIndex += _data
+    this.mInputCommandContainer.val(this.mLatestCommandArray[nextLen][0]);
+    this.setEnvironment(this.mLatestCommandArray[nextLen][1])
+    return true
+}
 
-DevConsoleScreen.prototype.notifyBackendOkInConsoleButtonPressed = function ()
-{
-    if (this.mSQHandle !== null)
-    {
-        
-        var inputFields = this.mDialogContainer.find('input');
-        SQ.call(this.mSQHandle, 'onOkInConsoleButtonPressed', [ $(inputFields[0]).getInputText(),  $(inputFields[1]).getInputText()]);
-        this.mLogModule.insertCommand($(inputFields[0]).getInputText())
-
-    }
-};
-
-DevConsoleScreen.prototype.notifyBackendCancelButtonPressed = function ()
-{
-    if (this.mSQHandle !== null)
-    {
-        SQ.call(this.mSQHandle, 'onCancelButtonPressed');
-    }
-};
-
-
-DevConsoleScreen.prototype.notifyBackendOnConnected = function ()
-{
-    if(this.mSQHandle !== null)
-    {
-        SQ.call(this.mSQHandle, 'onScreenConnected');
-    }
-};
-
-DevConsoleScreen.prototype.notifyBackendOnDisconnected = function ()
-{
-    if(this.mSQHandle !== null)
-    {
-        SQ.call(this.mSQHandle, 'onScreenDisconnected');
-    }
-};
-
-DevConsoleScreen.prototype.notifyBackendOnShown = function ()
-{
-    if(this.mSQHandle !== null)
-    {
-        SQ.call(this.mSQHandle, 'onScreenShown');
-    }
-};
-
-DevConsoleScreen.prototype.notifyBackendOnHidden = function ()
-{
-    if(this.mSQHandle !== null)
-    {
-        SQ.call(this.mSQHandle, 'onScreenHidden');
-    }
-};
-
-DevConsoleScreen.prototype.notifyBackendOnAnimating = function ()
-{
-    if(this.mSQHandle !== null)
-    {
-        SQ.call(this.mSQHandle, 'onScreenAnimating');
-    }
-};
 DevConsoleScreen.prototype.setPreviousCommands = function (_data)
 {
-    this.mLogModule.mLatestCommandArray = _data;
-    this.mLogModule.mLatestCommandIndex = _data.length
+    this.mLatestCommandArray = _data;
+    this.mLatestCommandIndex = _data.length
 };
 
+DevConsoleScreen.prototype.checkRunCommand = function (_inConsole)
+{
+    var command = this.mInputCommandContainer.getInputText();
+    this.insertCommand(command);
+    if(this.mEnvironment == true)
+    {
+        this.notifyBackendRunCommand(command);
+    }
+    else
+    {
+        SQ.call(this.mSQHandle, 'addPreviousCommand', [command, false]);
+        this.runCommandInJs(command);
+    }
+    if ( !_inConsole)
+    {
+        this.notifyBackendHide();
+    }
+};
 
+DevConsoleScreen.prototype.runCommandInJs = function (command)
+{
+    eval(command)
+};
 
+DevConsoleScreen.prototype.notifyBackendRunCommand = function(_command)
+{
+    if (this.mSQHandle !== null)
+    {
+        SQ.call(this.mSQHandle, 'onDevConsoleCommand', _command);
+    }
+}
+
+DevConsoleScreen.prototype.notifyBackendHide = function()
+{
+    if (this.mSQHandle !== null)
+    {
+        SQ.call(this.mSQHandle, 'hide');
+    }
+}
 
  $.fn.mod_createInput = function(_text, _minLength, _maxLength, _tabIndex, _inputUpdatedCallback, _classes, _acceptCallback, _inputid, _inputClickCallback)
  {
@@ -358,9 +330,6 @@ DevConsoleScreen.prototype.setPreviousCommands = function (_data)
         result.css('background-size', '45.0rem 2.8rem');
         result.css('text-align', 'center');
     }
-    
-/*  result.attr('style', 'background-size: 9.8rem 4.3rem")');
-    result.attr('style', 'background-image: url("coui://gfx/ui/skin/button_02_hovered.png")'); */
 
     if (maxLength !== null)
     {
@@ -497,11 +466,15 @@ DevConsoleScreen.prototype.setPreviousCommands = function (_data)
 
         var self = _event.data;
         var data = self.data('input');
+        var shiftPressed = (KeyModiferConstants.ShiftKey in _event && _event[KeyModiferConstants.ShiftKey] === true);
         var textLength = self.getInputTextLength();
         var assumedTextLength = textLength;
 
-
-
+        if(_event.keyCode === KeyConstants.Return && shiftPressed)
+        {
+            _acceptModifierCallback($(this));
+            return;
+        }
         
         if (code === KeyConstants.Backspace || code === KeyConstants.Delete)
         {
@@ -593,7 +566,6 @@ DevConsoleScreen.prototype.setPreviousCommands = function (_data)
 
     return result;
 };
-registerScreen("DevConsoleScreen", new DevConsoleScreen());
-registerScreen("TacticalDevConsoleScreen", new DevConsoleScreen());
 
+registerScreen("DevConsoleScreen", new DevConsoleScreen());
 

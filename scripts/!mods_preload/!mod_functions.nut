@@ -1,58 +1,7 @@
 //library of useful functions
-
-
-::logConsole <- function(_text = "", _log = true)
+::logConsole <- function(_text = "", _type = "message")
 {
-	this.DevConsole.DevConsoleScreen.log(_text)
-}
-
-//print out an array or table. _maxDepth defines the recursion level.  _console = true prints to console only
-::printData <- function(_obj, _maxdepth = 9999, _name = null, _tabs = 0, _console=false)
-{
-	local logFunc = function(_data){
-		if (_console) this.logConsole(_data, false)
-		else this.logInfo(_data)
-	}
-	if(_name != null) logFunc("Printing " + _name + "\n")
-	if(typeof _obj == "array" || typeof _obj == "table")
-	{
-		foreach (i, val in _obj)
-		{
-			if((typeof val == "array" || typeof val == "table") && _maxdepth > _tabs){
-				local toprint = ""
-				for (local i = 0; i <_tabs; i++) {
-				    toprint += "----"
-				}
-				toprint += typeof val == "array" ? "Index: " : "Key: "
-				logFunc(toprint + i + ", new nested " + typeof val + "\n")
-				printData(val, _maxdepth, null, _tabs+1, _console)
-			}
-			else{
-				local toprint = ""
-				for (local i = 0; i <_tabs; i++) {
-				    toprint += "----"
-				}
-				toprint += typeof _obj == "array" ? "Index: " : "Key: "
-				logFunc(toprint + i + "  ||   value: " + val + "\n")
-			}
-		}
-	}
-	else logFunc("Printing data: " + _obj)
-}
-
-//convenience function for ::printData(_console=true)
-::printDataToConsole <- function(_obj, _maxdepth=9999, _name = null, _tabs = 0)
-{
-	this.printData(_obj, _maxdepth, _name, _tabs, true)
-}
-
-this.getroottable().Math.randArray <- function(_array){
-
-	if (typeof _array != "array" || _array.len() == 0) {
-		this.logWarning("_array not an array or empty")
-		return
-	}
-	return _array[this.Math.rand(0, _array.len()-1)]
+	this.DevConsole.Screen.log(_text, _type);
 }
 
 //add item to player roster, pass the script
@@ -110,7 +59,7 @@ this.getroottable().Math.randArray <- function(_array){
 	}
 
 	local roster = this.World.getPlayerRoster().getAll();
-	if (_name == null) return this.Math.randArray(roster)
+	if (_name == null) return ::MSU.Array.rand(roster);
 
 	local retBro, retBroFull = [], retBroNameOnly = []; 
 	//delete character somehow gets added to renamed bros

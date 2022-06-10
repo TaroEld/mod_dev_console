@@ -54,6 +54,22 @@
     float: left;
 }
 
+.devconsole-input
+{
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    width: 50%;
+    background-color: red;
+    border: 2px solid green;
+    z-index: 999999;
+}
+
+.font-color-JS
+{
+	color: red !important;
+}
+
 .l-dialog-container-mod .footer
 {
     width: 100%;
@@ -70,37 +86,58 @@
     bottom: 0;
     width: 100.0rem;
     height: 4.3rem;
+    display: flex;
     position: absolute;
     margin: auto;
-}
-
-.l-dialog-container-mod .l-cancel-button
-{
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 23.0rem;
-    position: relative;
-    margin-left: 3.0rem;
-    float: left;
-    text-align: center;
-    line-height: 3.0rem;
 }
 
 .l-dialog-container-mod .l-ok-button
 {
     top: 0;
     right: 0;
-    bottom: 0;
     width: 23.0rem;
-    position: relative;
-    float: left;
     text-align: center;
     line-height: 3.0rem;
+    border: 2px solid white;
 }
 
 .custom-input-width
 {
-    background-size: 100% 4.0rem !important;
+    background-size: 100% 8.0rem !important;
 }
 
+.mod-log-module
+{
+    top     : 0;
+    left    : 0;
+    right   : 0;
+    bottom  : 0;
+    width   : 100%;
+    height  : 100%;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 2.0rem;
+    position: absolute;
+}
+
+
+.mod-logs-container
+{
+    top: 15.0rem;
+    width : 95%;
+    height: 80%;
+    position: absolute;
+    margin: auto;
+}
+
+.mod-logs-container .list
+{
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+.mod-logs-container .log-entry
+{
+    margin-left: 0.7rem;
+    margin-right: 0.2rem;
+    /*line-height: 1.3rem;*/
+}

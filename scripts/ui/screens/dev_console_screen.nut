@@ -1,13 +1,5 @@
-this.dev_console_screen <- {
+this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	m = {
-		JSHandle = null,
-		Visible = null,
-		Animating = null,
-		OnConnectedListener = null,
-		OnDisconnectedListener = null,
-		OnScreenShownListener = null,
-		OnScreenHiddenListener = null,
-		OnClosePressedListener = null,
 		PreviousCommands = [],
 		SpawnUnit = {
 			SpawnUnitScript = "",
@@ -17,126 +9,90 @@ this.dev_console_screen <- {
 
 	function create()
 	{
-		this.m.Visible = false;
-		this.m.Animating = false;
-		this.m.JSHandle = this.UI.connect("DevConsoleScreen", this);
 	}
 
-	function destroy()
+	function connect()
 	{
-		this.clearEventListener();
-		this.m.JSHandle = this.UI.disconnect(this.m.JSHandle);
-	}
-
-	function toggle(){
-		if (this.isVisible()){
-			this.hide();
-		}
-		else{
-			this.show();
-		}
+		this.m.JSHandle = this.UI.connect("DevConsoleScreen", this);
 	}
 
 	function show()
 	{
-		::printLog("Show called", "zmod_dev_console")
-		if (this.Tactical.isActive()){
-			::printLog("Show in tactical", "zmod_dev_console")
-			local state = this.Tactical.State
-			state.setPause(true);
-			#state.Tooltip.hide();
-			state.m.TacticalScreen.hide();
-			this.Cursor.setCursor(this.Const.UI.Cursor.Hand);
-			state.m.MenuStack.push(function ()
-			{
-				this.setPause(false);
-				this.m.TacticalScreen.show();
-			}.bindenv(state), function ()
-			{
-				return true
-			});
-		}
-		else{
-			::printLog("Show in world", "zmod_dev_console")
-			local state = this.World.State
-			state.m.CustomZoom = this.World.getCamera().Zoom;
-			this.World.getCamera().zoomTo(1.0, 4.0);
-			this.World.Assets.updateFormation();
-			state.setAutoPause(true);
-			state.m.WorldScreen.hide();
-			this.Cursor.setCursor(this.Const.UI.Cursor.Hand);
-			state.m.MenuStack.push(function ()
-			{
-				this.logInfo("menustack called")
-				this.World.getCamera().zoomTo(this.m.CustomZoom, 4.0);
-				this.m.WorldScreen.show();
-				this.World.Assets.refillAmmo();
-				this.updateTopbarAssets();
-				this.setAutoPause(false);
-			}.bindenv(state), function ()
-			{
-				return true
-			});
-		}
+		local activeState = ::MSU.Utils.getActiveState();
+		activeState.onHide();
+		switch(activeState.ClassName)
+		{
+			case "tactical_state":
+				::DevConsole.Mod.Debug.printWarning("Show in tactical")
+				activeState.setPause(true);
+				activeState.m.MenuStack.push(function ()
+				{
+					::DevConsole.Screen.hide();
+					this.onShow();
+					this.setPause(false);
+				});
+				break;
 
+			case "world_state":
+				::DevConsole.Mod.Debug.printWarning("Show in world")
+				activeState.setAutoPause(true);
+				activeState.m.MenuStack.push(function ()
+				{
+					::DevConsole.Screen.hide();
+					this.onShow();
+					this.setAutoPause(false);
+				});
+				break;
+
+			case "main_menu_state":
+				::DevConsole.Mod.Debug.printWarning("Show in main menu")
+				activeState.m.MenuStack.push(function ()
+				{
+					::DevConsole.Screen.hide();
+					this.onShow();
+				});
+				break;
+		}
 		this.Tooltip.hide();
 		this.setPreviousCommands();
 		this.m.JSHandle.asyncCall("show", null);
 		return false;
 	}
 	
-
 	function hide()
 	{
-		::printLog("Hide called", "zmod_dev_console")
-		::printLog("visible: " + this.isVisible(), "zmod_dev_console")
-		local state = this.Tactical.isActive() ? this.Tactical.State : this.World.State
-		if(this.isVisible()){
-			this.Tooltip.hide();
+		::DevConsole.Mod.Debug.printWarning("Hide called")
+		if (this.isVisible())
+		{
+			local activeState = ::MSU.Utils.getActiveState();
 			this.updatePreviousCommands()
 			this.m.JSHandle.asyncCall("hide", null);
-			state.m.MenuStack.pop();
+			::MSU.Utils.getActiveState().m.MenuStack.pop();
 			return false
 		}
 	}
 
-	function isVisible()
+	function toggle()
 	{
-		return this.m.Visible != null && this.m.Visible == true;
-	}
+		if(this.m.Animating)
+		{
+			return false
+		}
 
-	function isAnimating()
-	{
-		return this.m.Animating != null && this.m.Animating == true;
+		if (this.isVisible())
+		{
+			this.hide();
+		}
+		else
+		{
+			this.show();
+		}
+		return true;
 	}
-
-	function setOnConnectedListener( _listener )
-	{
-		this.m.OnConnectedListener = _listener;
-	}
-
-	function setOnDisconnectedListener( _listener )
-	{
-		this.m.OnDisconnectedListener = _listener;
-	}
-	
-	function setOnClosePressedListener( _listener )
-	{
-		this.m.OnClosePressedListener = _listener;
-	}
-
 
 	function onCancelButtonPressed()
 	{
 		this.hide()
-	}
-
-	function clearEventListener()
-	{
-		this.m.OnConnectedListener = null;
-		this.m.OnDisconnectedListener = null;
-		this.m.OnScreenHiddenListener = null;
-		this.m.OnScreenShownListener = null;
 	}
 
 	function onOkButtonPressed(_data)
@@ -151,7 +107,26 @@ this.dev_console_screen <- {
 		this.onDevConsoleCommand(_data, true)
 	}
 
-	function onSpawnUnitPressed(){
+	function onUpArrowPressed()
+	{
+		if (this.m.JSHandle != null && this.isVisible())
+		{
+			this.m.JSHandle.asyncCall("changeLatestInput", -1);
+			return true
+		}
+	}
+
+	function onDownArrowPressed()
+	{
+		if (this.m.JSHandle != null && this.isVisible())
+		{
+			this.m.JSHandle.asyncCall("changeLatestInput", 1);
+			return true
+		}
+	}
+
+	function onSpawnUnitPressed()
+	{
 		if (this.m.LastTileHovered != null && this.m.LastTileHovered.IsEmpty && this.m.SpawnUnit.SpawnUnitScript != "")
 		{
 			local script = this.m.SpawnUnit.SpawnUnitScript
@@ -163,144 +138,99 @@ this.dev_console_screen <- {
 		}
 	}
 
-	function onDevConsoleCommand(_data, _fromConsole = false)
+	function onDevConsoleCommand(_data)
 	{
-		local printcall = function(_text){
-			if (_fromConsole) this.logConsole(_text)
-			else this.logInfo(_text)
-		}
-		local cmd = _data[0]
+		local cmd = _data
 		if (cmd == null || cmd == "") return;
-		this.m.PreviousCommands.push(cmd)
+
+		this.addPreviousCommand([cmd, true]);
 		this.updatePreviousCommands()
+
 		//remove ominous ctrl character
 		local ctrl = ""
-		if (cmd.find(ctrl) != null){
+		if (cmd.find(ctrl) != null)
+		{
 			cmd = split(cmd, ctrl).reduce(@(a,b) a+b)
 		}
-		local args = _data[1]
-		args = split(args, ",")
-		local compiledScript, output;
-		
-		local compiled = true;
 
-		printcall(cmd)
-		try{
+		this.logInfo("Command: " + cmd)
+
+		local compiledScript, output;
+		try {
 			compiledScript = compilestring(cmd)
 		}
-		catch(exception){
-			printcall("Failed to compile command, Error: "  + exception)
-			compiled = false;
+		catch(exception)
+		{
+			::logError("Failed to compile command, Error: "  + exception)
 		}
-		if(compiled){
-			try{
-				output = compiledScript.call(this, args)
+
+		if (compiledScript != null)
+		{
+			try
+			{
+				output = compiledScript.call(this)
 			}
-			catch(exception){
-				printcall("Failed to run command, Error: " + exception)
+			catch (exception)
+			{
+				::logError("Failed to run command, Error: " + exception)
 			}
-		}
-		if (output != null){
-			printcall(output)
+			::logInfo(::MSU.Log.getLocalString("Output", output, 10, 2, false));
 		}
 
-		printcall("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
+		::logInfo("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
 	}
 
-
-	function log_newline()
+	function logEx( _text, _type = "message")
 	{
-		this.m.JSHandle.asyncCall("log", "\n");
+		this.m.JSHandle.asyncCall("log", {
+			Text = _text,
+			Type = _type
+		});
 	}
 
-	function logEx( _text )
+	function log( _text, _type = "message")
 	{
-		this.m.JSHandle.asyncCall("log", _text);
+		this.logEx("\n" + _text, _type);
 	}
 
-	function log( _text )
+	function addPreviousCommand(_data)
 	{
-		this.m.JSHandle.asyncCall("log", "\n" + _text);
-	}
-
-	function onScreenConnected()
-	{
-		if (this.m.OnConnectedListener != null)
-		{
-			this.m.OnConnectedListener();
-		}
-	}
-
-	function onScreenDisconnected()
-	{
-		if (this.m.OnDisconnectedListener != null)
-		{
-			this.m.OnDisconnectedListener();
-		}
-	}
-
-
-	function onScreenShown()
-	{
-		this.m.Visible = true;
-		this.m.Animating = false;
-	}
-
-	function onScreenHidden()
-	{
-		this.m.Visible = false;
-		this.m.Animating = false;
-
-	}
-
-	function onScreenAnimating()
-	{
-		this.m.Animating = true;
-	}
-
-	function onUpArrowPressed()
-	{
-		if (this.m.JSHandle != null && this.isVisible())
-		{
-			this.m.JSHandle.asyncCall("changeLatestInput", -1);
-			return false
-		}
-	}
-	function onDownArrowPressed()
-	{
-		if (this.m.JSHandle != null && this.isVisible())
-		{
-			this.m.JSHandle.asyncCall("changeLatestInput", 1);
-			return false
-		}
+		this.m.PreviousCommands.insert(0, _data);
+		if(this.m.PreviousCommands.len() > 10) this.m.PreviousCommands.pop();
 	}
 
 	function updatePreviousCommands()
 	{
 		if(this.m.PreviousCommands.len() == 0) return
-		local commands = clone(this.m.PreviousCommands)
-		commands.reverse()
-		foreach(idx, command in commands)
+		local activeState = ::MSU.Utils.getActiveState();
+		if(activeState.ClassName == "main_menu_state") return;
+		foreach(idx, command in this.m.PreviousCommands)
 		{
-			this.World.Statistics.getFlags().set("DevCommand" + idx, command)
+			this.World.Statistics.getFlags().set("DevCommand" + idx, command[0])
+			this.World.Statistics.getFlags().set("DevCommandEnv" + idx, command[1])
 			if (idx == 10) return
 		}
 	}
 
 	function setPreviousCommands()
 	{
+		local activeState = ::MSU.Utils.getActiveState();
+		if(activeState.ClassName == "main_menu_state") return;
+		this.m.PreviousCommands.clear();
+		for (local i = 10; i != 0; i--)
+		{
+			local command = this.World.Statistics.getFlags().get("DevCommand" + i);
+			if (command)
+			{
+				this.addPreviousCommand([command, this.World.Statistics.getFlags().get("DevCommandEnv" + i)]);
+			}
+		}
+
 		if (this.m.JSHandle != null)
 		{
-			local commands = []
-			local idx = 0
-			while (this.World.Statistics.getFlags().has("DevCommand" + idx)){
-				commands.push(this.World.Statistics.getFlags().get("DevCommand" + idx))
-				idx++
-			}
-			commands.reverse()
-			this.m.JSHandle.asyncCall("setPreviousCommands", commands);
+			this.m.JSHandle.asyncCall("setPreviousCommands", this.m.PreviousCommands);
 		}
 	}
 
-};
+});
 
