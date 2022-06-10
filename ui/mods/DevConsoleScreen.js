@@ -111,22 +111,6 @@ DevConsoleScreen.prototype.createLogContent = function ()
     var inputLayout = $('<div class="l-input"/>');
     row.append(inputLayout);
     this.mInputCommandContainer = inputLayout.mod_createInput('', 0, 10000, 1, null, 'text-font-small font-color-brother-name custom-input-width');
-    this.mInputCommandContainer.on("keydown", function(_event){
-        if (MSU.Keybinds.isKeybindPressed(self.mModID, "Run", _event))
-        {
-            self.checkRunCommand();
-            _event.stopImmediatePropagation();
-            return false
-        }
-
-        if (MSU.Keybinds.isKeybindPressed(self.mModID, "RunInConsole", _event))
-        {
-            self.checkRunCommand(_true);
-            _event.stopImmediatePropagation();
-            return false
-        }
-    })
-
     // create: log container
     var eventLogsContainerLayout = $('<div class="mod-logs-container"/>');
     this.mLogModule.append(eventLogsContainerLayout);
@@ -232,8 +216,8 @@ DevConsoleScreen.prototype.clearConsole = function()
 
 DevConsoleScreen.prototype.insertCommand = function (_command)
 {
-    this.mLatestCommandIndex += 1
-    this.mLatestCommandArray.push([_command, this.mEnvironment])
+    this.mLatestCommandArray.splice(0, 0, [_command, this.mEnvironment])
+    if(this.mLatestCommandArray.length > 10) this.mLatestCommandArray.pop()
 };
 
 DevConsoleScreen.prototype.changeLatestInput = function (_data)
@@ -241,11 +225,10 @@ DevConsoleScreen.prototype.changeLatestInput = function (_data)
     var currentLen = this.mLatestCommandArray.length
     var previousLen = this.mLatestCommandIndex
     var nextLen = previousLen + _data
-    if (nextLen < 0 || nextLen >= currentLen)
-    {
-        return false
-    }
-    this.mLatestCommandIndex += _data
+    if(nextLen < 0) nextLen = 0;
+    if(nextLen > 10) nextLen = 10;
+    if(nextLen == currentLen) nextLen -= 1;
+    this.mLatestCommandIndex = nextLen;
     this.mInputCommandContainer.val(this.mLatestCommandArray[nextLen][0]);
     this.setEnvironment(this.mLatestCommandArray[nextLen][1])
     return true
@@ -254,7 +237,7 @@ DevConsoleScreen.prototype.changeLatestInput = function (_data)
 DevConsoleScreen.prototype.setPreviousCommands = function (_data)
 {
     this.mLatestCommandArray = _data;
-    this.mLatestCommandIndex = _data.length
+    this.mLatestCommandIndex = 0;
 };
 
 DevConsoleScreen.prototype.checkRunCommand = function (_inConsole)
@@ -466,15 +449,8 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
 
         var self = _event.data;
         var data = self.data('input');
-        var shiftPressed = (KeyModiferConstants.ShiftKey in _event && _event[KeyModiferConstants.ShiftKey] === true);
         var textLength = self.getInputTextLength();
         var assumedTextLength = textLength;
-
-        if(_event.keyCode === KeyConstants.Return && shiftPressed)
-        {
-            _acceptModifierCallback($(this));
-            return;
-        }
         
         if (code === KeyConstants.Backspace || code === KeyConstants.Delete)
         {
@@ -536,22 +512,26 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
 
     result.on('keyup.input', null, result, function (_event)
     {
+		if (MSU.Keybinds.isKeybindPressed(DevConsole.mModID, "RunInConsole", _event))
+		{
+			console.error("RunInConsole")
+		    self.checkRunCommand(_true);
+		    _event.stopImmediatePropagation();
+		    _event.stopPropagation();
+		    return false
+		}
+	    if (MSU.Keybinds.isKeybindPressed(DevConsole.mModID, "Run", _event))
+	    {
+	    	console.error("run")
+	        self.checkRunCommand();
+	        _event.stopImmediatePropagation();
+	        _event.stopPropagation();
+	        return false
+	    }
         var self = _event.data;
         var data = self.data('input');
         var code = _event.which || _event.keyCode;
         data.inputDenied = false;
-
-        if(code === KeyConstants.Return || code === KeyConstants.Enter)
-        {
-            if(_acceptCallback !== undefined && jQuery.isFunction(_acceptCallback))
-            {
-                $(this).blur();
-                _acceptCallback($(this));
-            }
-
-            return;
-        }
-
         if(_inputUpdatedCallback !== undefined && jQuery.isFunction(_inputUpdatedCallback))
         {
             _inputUpdatedCallback($(this), self.getInputTextLength());

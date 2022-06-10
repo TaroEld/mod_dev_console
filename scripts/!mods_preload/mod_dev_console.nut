@@ -15,9 +15,11 @@
 	::MSU.UI.registerConnection(::DevConsole.Screen);
 
 	::DevConsole.Mod.Keybinds.addSQKeybind("toggleDevConsoleScreen", "ctrl+g", ::MSU.Key.State.All,  ::DevConsole.Screen.toggle.bindenv( ::DevConsole.Screen));
+	::DevConsole.Mod.Keybinds.addSQKeybind("closeDevConsoleScreen", "escape", ::MSU.Key.State.All,  ::DevConsole.Screen.hide.bindenv( ::DevConsole.Screen));
 	::DevConsole.Mod.Keybinds.addSQKeybind("onUpPressedDevConsoleScreen", "up", ::MSU.Key.State.All, ::DevConsole.Screen.onUpArrowPressed.bindenv( ::DevConsole.Screen));
 	::DevConsole.Mod.Keybinds.addSQKeybind("onDownPressedDevConsoleScreen", "down",  ::MSU.Key.State.All, ::DevConsole.Screen.onDownArrowPressed.bindenv( ::DevConsole.Screen));
 	::DevConsole.Mod.Keybinds.addSQKeybind("onSpawnUnitDevConsoleScreen", "ctrl+z", ::MSU.Key.State.Tactical, ::DevConsole.Screen.onSpawnUnitPressed.bindenv( ::DevConsole.Screen));
+
 	::DevConsole.Mod.Keybinds.addJSKeybind("Run", "return");
 	::DevConsole.Mod.Keybinds.addJSKeybind("RunInConsole", "shift+return");
 

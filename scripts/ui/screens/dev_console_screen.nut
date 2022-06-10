@@ -95,23 +95,11 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		this.hide()
 	}
 
-	function onOkButtonPressed(_data)
-	{
-		
-		this.hide();
-		this.onDevConsoleCommand(_data)
-	}
-
-	function onOkInConsoleButtonPressed(_data)
-	{
-		this.onDevConsoleCommand(_data, true)
-	}
-
 	function onUpArrowPressed()
 	{
 		if (this.m.JSHandle != null && this.isVisible())
 		{
-			this.m.JSHandle.asyncCall("changeLatestInput", -1);
+			this.m.JSHandle.asyncCall("changeLatestInput", 1);
 			return true
 		}
 	}
@@ -120,7 +108,7 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	{
 		if (this.m.JSHandle != null && this.isVisible())
 		{
-			this.m.JSHandle.asyncCall("changeLatestInput", 1);
+			this.m.JSHandle.asyncCall("changeLatestInput", -1);
 			return true
 		}
 	}
