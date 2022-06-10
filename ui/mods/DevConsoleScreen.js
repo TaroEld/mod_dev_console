@@ -1,11 +1,15 @@
 "use strict";
 
-// var console_error = console.error;
-// console.error = function(args)
-// {
-// 	console_error(args);
-// 	if (Screens.DevConsoleScreen) Screens.DevConsoleScreen.log({Text : arguments[0], Type : "error"})
-// }
+var console_error = console.error;
+console.error = function(args)
+{
+	console_error.call(console, args);
+	if (Screens.DevConsoleScreen) Screens.DevConsoleScreen.log({Text : arguments[0], Type : "error"})
+}
+
+var DevConsole = {
+	mModID : "mod_dev_console"
+}
 
 var DevConsoleScreen = function(_parent)
 {
