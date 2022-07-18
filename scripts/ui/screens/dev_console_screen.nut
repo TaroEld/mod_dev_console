@@ -220,5 +220,20 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		}
 	}
 
+	function checkRunCommandInConsole()
+	{
+		::logInfo("checkRunCommandInConsole")
+		return this.checkRunCommand(true);
+	}
+
+	function checkRunCommand(_bool = false)
+	{
+		::logInfo("checkRunCommand")
+		if (this.isVisible)
+		{
+			this.m.JSHandle.asyncCall("checkRunCommand", _bool);
+			return true;
+		}
+	}
 });
 

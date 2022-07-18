@@ -20,8 +20,11 @@
 	::DevConsole.Mod.Keybinds.addSQKeybind("onDownPressedDevConsoleScreen", "down",  ::MSU.Key.State.All, ::DevConsole.Screen.onDownArrowPressed.bindenv( ::DevConsole.Screen));
 	::DevConsole.Mod.Keybinds.addSQKeybind("onSpawnUnitDevConsoleScreen", "ctrl+z", ::MSU.Key.State.Tactical, ::DevConsole.Screen.onSpawnUnitPressed.bindenv( ::DevConsole.Screen));
 
-	::DevConsole.Mod.Keybinds.addJSKeybind("Run", "return");
-	::DevConsole.Mod.Keybinds.addJSKeybind("RunInConsole", "shift+return");
+	::DevConsole.Mod.Keybinds.addSQKeybind("Run", "enter",  ::MSU.Key.State.All, ::DevConsole.Screen.checkRunCommand.bindenv( ::DevConsole.Screen));
+	::DevConsole.Mod.Keybinds.addSQKeybind("RunInConsole", "shift+enter", ::MSU.Key.State.All, ::DevConsole.Screen.checkRunCommandInConsole.bindenv( ::DevConsole.Screen));
+
+	// ::DevConsole.Mod.Keybinds.addJSKeybind("Run", "return");
+	// ::DevConsole.Mod.Keybinds.addJSKeybind("RunInConsole", "shift+return");
 
 	local generalPage = ::DevConsole.Mod.ModSettings.addPage("General");
 	generalPage.addBooleanSetting("PrintForParser", false, "Print for Parser", "Prints all lines to the log to be parsed.");

@@ -516,22 +516,6 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
 
     result.on('keyup.input', null, result, function (_event)
     {
-		if (MSU.Keybinds.isKeybindPressed(DevConsole.mModID, "RunInConsole", _event))
-		{
-			console.error("RunInConsole")
-		    self.checkRunCommand(_true);
-		    _event.stopImmediatePropagation();
-		    _event.stopPropagation();
-		    return false
-		}
-	    if (MSU.Keybinds.isKeybindPressed(DevConsole.mModID, "Run", _event))
-	    {
-	    	console.error("run")
-	        self.checkRunCommand();
-	        _event.stopImmediatePropagation();
-	        _event.stopPropagation();
-	        return false
-	    }
         var self = _event.data;
         var data = self.data('input');
         var code = _event.which || _event.keyCode;
