@@ -99,3 +99,13 @@
 	}
 }
 
+::getTown <- function(_townName)
+{
+	foreach(town in ::World.EntityManager.getSettlements())
+	{
+		if (settlement.getName() == _townName)
+		{
+			return settlement;
+		}
+	}
+}
