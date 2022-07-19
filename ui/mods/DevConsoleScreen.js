@@ -41,6 +41,11 @@ Object.defineProperty(DevConsoleScreen.prototype, 'constructor', {
     writable: true
 });
 
+DevConsoleScreen.prototype.onShow = function()
+{
+	 this.mInputCommandContainer.focus();
+}
+
 DevConsoleScreen.prototype.createDIV = function (_parentDiv)
 {
     var self = this;
