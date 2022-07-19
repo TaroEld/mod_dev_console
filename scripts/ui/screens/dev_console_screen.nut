@@ -162,7 +162,10 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			{
 				::logError("Failed to run command, Error: " + exception)
 			}
-			::logInfo(::MSU.Log.getLocalString("Output", output, 10, 2, false));
+			if (output)
+			{
+				::logInfo("Output: " + ::MSU.Log.getLocalString(output, 10, 2, true, true));
+			}
 		}
 
 		::logInfo("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
