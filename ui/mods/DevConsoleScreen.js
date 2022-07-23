@@ -28,10 +28,17 @@ var DevConsoleScreen = function(_parent)
 
     this.mLatestCommandArray = [];
     this.mLatestCommandIndex = 0;
+    this.mEnvironment = true;
 
     // constants
     this.mMaxVisibleEntries = 1000;
-    this.mEnvironment = true;
+
+    this.mColors = {
+    	BackgroundColor : null,
+    	message : null,
+    	warning : null,
+    	error : null,
+    }
 }
 
 DevConsoleScreen.prototype = Object.create(MSUUIScreen.prototype);
@@ -43,11 +50,14 @@ Object.defineProperty(DevConsoleScreen.prototype, 'constructor', {
 
 DevConsoleScreen.prototype.onShow = function()
 {
-	 this.mInputCommandContainer.focus();
+	this.mInputCommandContainer.focus();
+	if (this.mOutputScrollContainer.children().length > 0)
+		this.mOutputContainer.scrollListToBottom();
 }
 
 DevConsoleScreen.prototype.createDIV = function (_parentDiv)
 {
+	this.updateColorSettings();
     var self = this;
 
     // create: containers (init hidden!)
@@ -124,7 +134,7 @@ DevConsoleScreen.prototype.createLogContent = function ()
     var eventLogsContainerLayout = $('<div class="mod-logs-container"/>');
     this.mLogModule.append(eventLogsContainerLayout);
     this.mOutputContainer = eventLogsContainerLayout.createList(2);
-    this.mOutputContainer.css("background-color", "rgba(" + MSU.getSettingValue(this.mModID, "BackgroundColor") + ")");
+    this.mOutputContainer.css("background-color", "rgba(" + this.mColors.BackgroundColor + ")");
     this.mOutputScrollContainer = this.mOutputContainer.findListScrollContainer();
 };
 
@@ -170,14 +180,29 @@ DevConsoleScreen.prototype.setEnvironment = function (_env)
 
 DevConsoleScreen.prototype.updateColorSettings = function ()
 {
-    this.mOutputContainer.css("background-color", "rgba(" + MSU.getSettingValue(this.mModID, "BackgroundColor") + ")");
-    this.mCurrentEntries.forEach($.proxy(function(_entry){
-        _entry.css("color", "rgba(" + MSU.getSettingValue(this.mModID, _entry.data("type")) + ")");
-    }, this))
+	this.mColors = {
+		BackgroundColor : MSU.getSettingValue(this.mModID, "BackgroundColor"),
+		message : MSU.getSettingValue(this.mModID, "message"),
+		warning : MSU.getSettingValue(this.mModID, "warning"),
+		error : MSU.getSettingValue(this.mModID, "error"),
+	}
+	if (this.mOutputContainer != null)
+	{
+		this.mOutputContainer.css("background-color", "rgba(" + this.mColors.BackgroundColor + ")");
+	}
+
+    if (this.mCurrentEntries != null)
+    {
+    	this.mCurrentEntries.forEach($.proxy(function(_entry){
+    	    _entry.css("color", "rgba(" + this.mColors[_entry.data("type")] + ")");
+    	}, this))
+    }
 }
 
 DevConsoleScreen.prototype.log = function(_message)
 {
+	if (this.mOutputScrollContainer == null)
+		return
     var entry = this.createEventLogEntryDIV(_message.Text, _message.Type);
     if (entry !== null)
     {
@@ -191,7 +216,7 @@ DevConsoleScreen.prototype.log = function(_message)
         }
         this.mOutputScrollContainer.append(entry);
         this.mCurrentEntries.push(entry);
-        // this.mOutputContainer.scrollListToBottom();
+        this.mOutputContainer.scrollListToBottom();
     }
 }
 
@@ -204,7 +229,7 @@ DevConsoleScreen.prototype.createEventLogEntryDIV = function (_text, _type)
 
     var entry = $('<div class="log-entry text-font-small"></div>');
     entry.data("type", _type);
-    entry.css("color", "rgba(" + MSU.getSettingValue(this.mModID, _type) + ")");
+    entry.css("color", "rgba(" + this.mColors[_type] + ")");
     var parsedText = XBBCODE.process({
         text: _text,
         removeMisalignedTags: false,
@@ -270,7 +295,13 @@ DevConsoleScreen.prototype.checkRunCommand = function (_inConsole)
 
 DevConsoleScreen.prototype.runCommandInJs = function (command)
 {
-    eval(command)
+	command = command.replace(/[\u0127]/g, '');
+	console.error("Command: " + command);
+    var ret = Function(command)();
+    if (ret !== undefined && ret !== null)
+    {
+    	console.error("Output: " + ret);
+    }
 };
 
 DevConsoleScreen.prototype.notifyBackendRunCommand = function(_command)
@@ -439,8 +470,6 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
             _event.data.data('input').inputDenied = true;
             return true;
         }
-
-
 
         if (code < KeyConstants.Zero ||
             code > KeyConstants.Z)
