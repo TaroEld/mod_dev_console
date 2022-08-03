@@ -51,6 +51,7 @@ Object.defineProperty(DevConsoleScreen.prototype, 'constructor', {
 DevConsoleScreen.prototype.onShow = function()
 {
 	this.mInputCommandContainer.focus();
+	this.adjustDivHeights()
 	if (this.mOutputScrollContainer.children().length > 0)
 		this.mOutputContainer.scrollListToBottom();
 }
@@ -246,6 +247,7 @@ DevConsoleScreen.prototype.clearConsole = function()
     this.mOutputScrollContainer.empty();
     this.mCurrentEntries = [];
     this.mInputCommandContainer.focus();
+    this.adjustDivHeights();
 }
 
 DevConsoleScreen.prototype.insertCommand = function (_command)
@@ -302,6 +304,21 @@ DevConsoleScreen.prototype.runCommandInJs = function (command)
     {
     	console.error("Output: " + ret);
     }
+};
+
+DevConsoleScreen.prototype.adjustDivHeights = function ()
+{
+	var inputContainer = this.mInputCommandContainer;
+	var outputContainer = this.mOutputContainer;
+	// set to auto so that scrollheight resets
+	inputContainer.css("height", "auto");
+
+	//depends on lines of content in the input container
+	var inputHeight = Math.min(this.mLogModule.height() / 2.5, inputContainer.prop('scrollHeight')) + 2
+	var outputHeight = Screens.DevConsoleScreen.mLogModule.height() - inputHeight - 100;
+
+	inputContainer.css("height", inputHeight + "px");
+	outputContainer.css("height", outputHeight + "px");
 };
 
 DevConsoleScreen.prototype.notifyBackendRunCommand = function(_command)
@@ -560,6 +577,10 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
         }
 
         self.data('input', data);
+    });
+
+    result.on("input", function () {
+      Screens.DevConsoleScreen.adjustDivHeights();
     });
 
     result.data('input', data);
