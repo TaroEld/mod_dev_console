@@ -118,24 +118,28 @@
     margin-bottom: auto;
     margin-left: 2.0rem;
     position: absolute;
+    display: flex;
+    flex-direction: column;
 }
 
-
-.mod-logs-container
+.devconsole-input-layout,
+.devconsole-output-layout
 {
-    top: 15.0rem;
-    width : 95%;
-    height: 80%;
-    position: absolute;
-    margin: auto;
+	max-height: 45%;
+	width: 90%;
+}
+.devconsole-output-layout
+{
+	margin-top: 5rem;
+	min-height: 45%;
 }
 
-.mod-logs-container .list
+.devconsole-output-layout .list
 {
     background-size: 100% 100%;
     background-repeat: no-repeat;
 }
-.mod-logs-container .log-entry
+.devconsole-output-layout .log-entry
 {
     margin-left: 0.7rem;
     margin-right: 0.2rem;
