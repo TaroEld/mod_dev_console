@@ -54,16 +54,23 @@
     float: left;
 }
 
-.devconsole-input
+/*.devconsole-input
 {
     position: absolute;
     left: 50%;
     top: 30%;
     width: 50%;
     background-color: red;
-    border: 2px solid green;
     z-index: 999999;
+}*/
+
+textarea
+{
+    -moz-user-select: -moz-text;
+    -webkit-user-select: text;
+    user-select: text;
 }
+
 
 .font-color-JS
 {

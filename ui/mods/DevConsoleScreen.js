@@ -123,18 +123,17 @@ DevConsoleScreen.prototype.createLogContent = function ()
     this.mLogModule = $('<div class="mod-log-module"/>');
     this.mDialogContentContainer.append(this.mLogModule);
 
-    var row = $('<div class="row"/>');
-    this.mLogModule.append(row);
-    var label = $('<div class="label text-font-normal font-color-label font-bottom-shadow">Command</div>');
-    row.append(label);
+    var inputLayout = $('<div class="devconsole-input-layout"/>').appendTo(this.mLogModule);
+    var label = $('<div class="label text-font-normal font-color-label font-bottom-shadow">Command</div>').appendTo(inputLayout);
 
-    var inputLayout = $('<div class="l-input"/>');
-    row.append(inputLayout);
-    this.mInputCommandContainer = inputLayout.mod_createInput('', 0, 10000, 1, null, 'text-font-small font-color-brother-name custom-input-width');
+    var textAreaLayout = $('<div class="l-input"/>').appendTo(inputLayout);
+    this.mInputCommandContainer = textAreaLayout.mod_createInput('', 0, 10000, 1, null);
+    // this.mInputCommandContainer = $('<textarea class="text-font-small font-color-brother-name"/>').appendTo(inputLayout);
+    // this.mInputCommandContainer = $('<textarea class="text-font-small font-color-brother-name"/>').appendTo(inputLayout);
+
     // create: log container
-    var eventLogsContainerLayout = $('<div class="mod-logs-container"/>');
-    this.mLogModule.append(eventLogsContainerLayout);
-    this.mOutputContainer = eventLogsContainerLayout.createList(2);
+    var outputLayout = $('<div class="devconsole-output-layout"/>').appendTo(this.mLogModule);
+    this.mOutputContainer = outputLayout.createList(2);
     this.mOutputContainer.css("background-color", "rgba(" + this.mColors.BackgroundColor + ")");
     this.mOutputScrollContainer = this.mOutputContainer.findListScrollContainer();
 };
