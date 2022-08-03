@@ -13,8 +13,9 @@
 		local sp = split(item, "/")
 	    if(sp[sp.len()-1] == _script){
 	    	::logConsole("Adding item: " + item )
-	    	this.World.Assets.getStash().add(this.new(item))
-	    	return item
+	    	local ret = this.new(item);
+	    	this.World.Assets.getStash().add(ret);
+	    	return ret;
 	    }
 	}
 	local tryToParse = this.new(_script)
