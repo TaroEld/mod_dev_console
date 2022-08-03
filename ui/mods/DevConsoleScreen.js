@@ -343,33 +343,9 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
     var maxLength = _maxLength || null;
     var tabIndex = _tabIndex || null;
 
-    var result = $('<input type="text" class="ui-control"/>');
+    // var result = $('<input type="text" class="ui-control"/>');
+    var result = $('<textarea autofocus rows="5" cols="200" type="text" class="text-font-small font-color-brother-name custom-input-width custom-input-width"/>');
     var data = { minLength: _minLength || 0, maxLength: _maxLength || null, inputUpdatedCallback: null, acceptCallback: null, inputDenied: false };
-    
-    if (_inputid == 2)
-    {
-        result.css('background-image', 'url("coui://gfx/ui/skin/input_2_default.png")');
-        result.css('background-size', '12.4rem 2.8rem');
-        result.css('text-align', 'center');
-    }
-    else if (_inputid == 3)
-    {
-        result.css('background-image', 'url("coui://gfx/ui/skin/input_3_default.png")');
-        result.css('background-size', '5.6rem 2.8rem');
-        result.css('text-align', 'center');
-    }
-    else if (_inputid == 4)
-    {
-        result.css('background-image', 'url("coui://gfx/ui/skin/input_4_default.png")');
-        result.css('background-size', '20.0rem 2.8rem');
-        result.css('text-align', 'center');
-    }
-    else if (_inputid == 5)
-    {
-        result.css('background-image', 'url("coui://gfx/ui/skin/input_5_default.png")');
-        result.css('background-size', '45.0rem 2.8rem');
-        result.css('text-align', 'center');
-    }
 
     if (maxLength !== null)
     {
@@ -379,11 +355,6 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
     if (tabIndex !== null)
     {
         result.attr('tabindex', tabIndex);
-    }
-
-    if (_classes !== undefined && _classes !== null && typeof(_classes) === 'string')
-    {
-        result.addClass(_classes);
     }
 
     if (_inputUpdatedCallback !== undefined && jQuery.isFunction(_inputUpdatedCallback))
@@ -396,53 +367,6 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
         data.acceptCallback = _acceptCallback;
     }
 
-/*  result.onmouseover = function ()
-    {
-        var imgstringa = 'url("coui://gfx/ui/skin/button_0'+2+'_inactive.png")';
-        result.css('background-image', imgstringa);
-        result.css('background-size', '9.8rem 4.3rem');
-    };
-     */
-    result.on('mouseover.input', null, result, function (_event)
-    {
-        if (_inputid == 2)
-        {
-            result.css('background-image', 'url("coui://gfx/ui/skin/input_2_active.png")');
-        }
-        else if (_inputid == 3)
-        {
-            result.css('background-image', 'url("coui://gfx/ui/skin/input_3_active.png")');
-        }
-        else if (_inputid == 4)
-        {
-            result.css('background-image', 'url("coui://gfx/ui/skin/input_4_active.png")');
-        }
-        else if (_inputid == 5)
-        {
-            result.css('background-image', 'url("coui://gfx/ui/skin/input_5_active.png")');
-        }
-    });
-    
-    result.on('mouseout.input', null, result, function (_event)
-    {
-        if (_inputid == 2)
-        {
-            result.css('background-image', 'url("coui://gfx/ui/skin/input_2_default.png")');
-        }
-        else if (_inputid == 3)
-        {
-            result.css('background-image', 'url("coui://gfx/ui/skin/input_3_default.png")');
-        }
-        else if (_inputid == 4)
-        {
-            result.css('background-image', 'url("coui://gfx/ui/skin/input_4_default.png")');
-        }
-        else if (_inputid == 5)
-        {
-            result.css('background-image', 'url("coui://gfx/ui/skin/input_5_default.png")');
-        }
-    });
-    
     result.on('click.input', null, result, function (_event)
     {
         if(_inputClickCallback !== undefined && jQuery.isFunction(_inputClickCallback))
@@ -450,60 +374,83 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
             _inputClickCallback($(this));
         }
     });
-    
-    result.on('focusout.input', null, result, function (_event)
-    {
-        if (_inputid == 2 || _inputid == 3 || _inputid == 4 || _inputid == 5)
-        {
-            if(_acceptCallback !== undefined && jQuery.isFunction(_acceptCallback))
-            {
-                _acceptCallback($(this));
-            }
-        }
-    });
-    
+
     // input handler
     result.on('keydown.input', null, result, function (_event)
     {
         var code = _event.which || _event.keyCode;
         var inputDenied = false;
-
-        if (code === KeyConstants.Home){
-            code = KeyConstants.ArrowUp
-        }
-        if (code === KeyConstants.End){
-            code = KeyConstants.ArrowDown
-        }
-        
-        if (code === KeyConstants.Tabulator ||
-            code === KeyConstants.ArrowUp ||
-            code === KeyConstants.ArrowDown
-            )
-        {
-            return true;
-        }
-        if ((code === KeyConstants.ArrowLeft || code === KeyConstants.ArrowRight) && _event.data.data('input').inputDenied === false)
-        {
-            _event.data.data('input').inputDenied = true;
-            return true;
-        }
-
-        if (code < KeyConstants.Zero ||
-            code > KeyConstants.Z)
-        {
-            if (code !== KeyConstants.Backspace &&
-                code !== KeyConstants.Delete &&
-                code !== KeyConstants.Space
-                )
-            {
-                return false;
-            }
-        }
-
-
-
         var self = _event.data;
         var data = self.data('input');
+        var inputDeniedUntil = data.inputDeniedUntil || 0;
+        var inputDelay = inputDeniedUntil == 0 ? 40 : 500;
+
+        if (MSU.Keybinds.isKeybindPressed(DevConsole.mModID, "RunInConsole", _event))
+        {
+        	if (!data.inputDenied)
+        	{
+        		Screens.DevConsoleScreen.checkRunCommand(true);
+        		data.inputDenied = true;
+        		self.data("input", data)
+        	}
+        	return false;
+        }
+
+        // copied from https://stackoverflow.com/questions/6637341/use-tab-to-indent-in-textarea
+        if (code === KeyConstants.Tabulator) {
+            _event.preventDefault();
+            var start = this.selectionStart;
+            var end = this.selectionEnd;
+
+            // set textarea value to: text before caret + tab + text after caret
+            this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
+
+            // put caret at right position again
+            this.selectionStart = this.selectionEnd = start + 4;
+            return false;
+        }
+
+        if (code === KeyConstants.Home)
+            code = KeyConstants.ArrowUp
+
+        if (code === KeyConstants.End)
+            code = KeyConstants.ArrowDown
+
+        // set a delay between inputs
+        if (   code === KeyConstants.ArrowLeft
+        	|| code === KeyConstants.ArrowRight
+        	|| code === KeyConstants.ArrowUp
+        	|| code === KeyConstants.ArrowDown
+        	|| code === KeyConstants.Delete
+        	|| code === KeyConstants.Backspace
+        	|| (_event[KeyModiferConstants.CtrlKey] === true && code === KeyConstants.V))
+        {
+        	var stop = false;
+        	var inputDelay = inputDeniedUntil == 0 ? 40 : 500;
+        	// special case for ctrl v
+        	inputDelay = (_event[KeyModiferConstants.CtrlKey] === true && code === KeyConstants.V) ? 500 : inputDelay;
+        	if (data.inputDenied === undefined || data.inputDenied === false)
+        	{
+        		data.inputDenied = true;
+        		data.inputDeniedUntil = (new Date()).getTime() + inputDelay;
+        	}
+        	else if (inputDeniedUntil > (new Date()).getTime())
+        	{
+        		stop = true;
+        	}
+        	else
+        	{
+        		data.inputDenied = false;
+        		delete data.inputDeniedUntil;
+        	}
+        	self.data("input", data)
+        	if (stop)
+        	{
+        		return false;
+        	}
+
+        }
+
         var textLength = self.getInputTextLength();
         var assumedTextLength = textLength;
         
@@ -528,13 +475,6 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
                 assumedTextLength += 1;
             }
         }
-
-
-        if (_event[KeyModiferConstants.CtrlKey] === true && code === KeyConstants.V && data.inputDenied === true)
-        {
-            inputDenied = true;
-        }
-
         
         if (inputDenied === true)
         {
@@ -549,10 +489,6 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
             _event.preventDefault();
             _event.stopPropagation();
             //return false;
-        }
-        if (_event[KeyModiferConstants.CtrlKey] === true && code === KeyConstants.V)
-        {
-            data.inputDenied = true;
         }
 
         self.data('input', data);
@@ -569,7 +505,6 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
     {
         var self = _event.data;
         var data = self.data('input');
-        var code = _event.which || _event.keyCode;
         data.inputDenied = false;
         if(_inputUpdatedCallback !== undefined && jQuery.isFunction(_inputUpdatedCallback))
         {
