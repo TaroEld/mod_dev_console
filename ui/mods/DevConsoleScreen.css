@@ -18,7 +18,7 @@
     height: 100%;
     width: 100%;
     position: relative;
-    background-image: url("coui://gfx/ui/skin/dialog_background_01.png");
+    background-image: url("coui://gfx/mods/msu/skin/generic_background_large_border.png");
     background-size: 100% 100%;
     background-repeat: no-repeat;
 }
@@ -98,12 +98,15 @@
     width: 23.0rem;
     text-align: center;
     line-height: 3.0rem;
-    border: 2px solid white;
 }
 
 .custom-input-width
 {
-    background-size: 100% 8.0rem !important;
+	background-image: none !important;
+	background-color: black !important;
+	border: 1px solid gold !important;
+	background-size: 100% 100% !important;
+	background-repeat: no-repeat;
 }
 
 .mod-log-module
