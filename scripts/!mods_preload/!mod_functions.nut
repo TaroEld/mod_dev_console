@@ -104,9 +104,9 @@
 {
 	foreach(town in ::World.EntityManager.getSettlements())
 	{
-		if (settlement.getName() == _townName)
+		if (town.getName() == _townName)
 		{
-			return settlement;
+			return town;
 		}
 	}
 }
