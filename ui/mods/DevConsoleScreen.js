@@ -19,13 +19,14 @@ var DevConsoleScreen = function(_parent)
     this.mID = "DevConsoleScreen";
     this.mContainer = null;
     this.mDialogContainer = null;
+    this.mTimerHandle = null;
+    this.mMessageQueue = [];
 
     this.mInputCommandContainer = null;
     this.mInputArgumentContainer = null;
 
     this.mOutputContainer = null;
     this.mOutputScrollContainer = null;
-    this.mCurrentEntries = [];
 
     this.mLatestCommandArray = [];
     this.mLatestCommandIndex = 0;
@@ -53,8 +54,7 @@ DevConsoleScreen.prototype.onShow = function()
 {
 	this.mInputCommandContainer.focus();
 	this.adjustDivHeights()
-	if (this.mOutputScrollContainer.children().length > 0)
-		this.mOutputContainer.scrollListToBottom();
+	this.scrollToBottom();
 }
 
 DevConsoleScreen.prototype.createDIV = function (_parentDiv)
@@ -82,6 +82,7 @@ DevConsoleScreen.prototype.createDIV = function (_parentDiv)
     var button = layout.createTextButton("Run", function ()
     {
         self.checkRunCommand();
+        self.mInputCommandContainer.focus();
     }, '', 4);
 
     var layout = $('<div class="l-ok-button"/>');
@@ -89,6 +90,7 @@ DevConsoleScreen.prototype.createDIV = function (_parentDiv)
     button = layout.createTextButton("Run in console", function ()
     {
         self.checkRunCommand(true);
+        self.mInputCommandContainer.focus();
     }, '', 4);
 
      var layout = $('<div class="l-ok-button"/>');
@@ -96,6 +98,7 @@ DevConsoleScreen.prototype.createDIV = function (_parentDiv)
     button = layout.createTextButton("Clear console", function ()
     {
         self.clearConsole();
+        self.mInputCommandContainer.focus();
     }, '', 4);
 
     var layout = $('<div class="l-ok-button"/>');
@@ -103,6 +106,7 @@ DevConsoleScreen.prototype.createDIV = function (_parentDiv)
     this.mEnvButton = layout.createTextButton("Squirrel", function ()
     {
         self.setEnvironment(!self.mEnvironment);
+        self.mInputCommandContainer.focus();
     }, '', 4);
     
     var layout = $('<div class="l-ok-button"/>');
@@ -181,6 +185,7 @@ DevConsoleScreen.prototype.setEnvironment = function (_env)
 
 DevConsoleScreen.prototype.updateColorSettings = function ()
 {
+	var self = this;
 	this.mColors = {
 		BackgroundColor : MSU.getSettingValue(this.mModID, "BackgroundColor"),
 		message : MSU.getSettingValue(this.mModID, "message"),
@@ -249,7 +254,6 @@ DevConsoleScreen.prototype.clearConsole = function()
 {
     this.mInputCommandContainer.val('');
     this.mOutputScrollContainer.empty();
-    this.mCurrentEntries = [];
     this.mInputCommandContainer.focus();
     this.adjustDivHeights();
 }
@@ -324,6 +328,11 @@ DevConsoleScreen.prototype.adjustDivHeights = function ()
 	inputContainer.css("height", inputHeight + "px");
 	outputContainer.css("height", outputHeight + "px");
 };
+
+DevConsoleScreen.prototype.scrollToBottom = function()
+{
+	this.mOutputContainer.scrollListToBottom();
+}
 
 DevConsoleScreen.prototype.notifyBackendRunCommand = function(_command)
 {

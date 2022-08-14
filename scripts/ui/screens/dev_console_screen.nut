@@ -1,20 +1,12 @@
 this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	m = {
+		ID = "DevConsoleScreen",
 		PreviousCommands = [],
 		SpawnUnit = {
 			SpawnUnitScript = "",
 			SpawnUnitFaction = this.Const.Faction.Enemy
 		},
 	},
-
-	function create()
-	{
-	}
-
-	function connect()
-	{
-		this.m.JSHandle = this.UI.connect("DevConsoleScreen", this);
-	}
 
 	function show()
 	{
@@ -211,7 +203,7 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		local activeState = ::MSU.Utils.getActiveState();
 		if(activeState.ClassName == "main_menu_state") return;
 		this.m.PreviousCommands.clear();
-		for (local i = 10; i != 0; i--)
+		for (local i = 10; i != -1; i--)
 		{
 			local command = this.World.Statistics.getFlags().get("DevCommand" + i);
 			if (command)
@@ -228,13 +220,11 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 
 	function checkRunCommandInConsole()
 	{
-		::logInfo("checkRunCommandInConsole")
 		return this.checkRunCommand(true);
 	}
 
 	function checkRunCommand(_bool = false)
 	{
-		::logInfo("checkRunCommand")
 		if (this.isVisible)
 		{
 			this.m.JSHandle.asyncCall("checkRunCommand", _bool);
