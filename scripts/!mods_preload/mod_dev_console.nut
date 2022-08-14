@@ -44,21 +44,21 @@
 	})
 
 	local logInfo = ::logInfo
-	::logInfo = function(_msg)
+	::logInfo = function(_msg, _dev = true)
 	{
-		if(::DevConsole.Screen != null && ::DevConsole.Screen.isConnected()) ::DevConsole.Screen.log(_msg)
+		if(_dev && ::DevConsole.Screen != null && ::DevConsole.Screen.isConnected()) ::DevConsole.Screen.log(_msg)
 		logInfo(_msg)
 	}
 	local logWarning = ::logWarning
-	::logWarning = function(_msg)
+	::logWarning = function(_msg, _dev = true)
 	{
-		if(::DevConsole.Screen != null && ::DevConsole.Screen.isConnected()) ::DevConsole.Screen.log(_msg, "warning")
+		if(_dev && ::DevConsole.Screen != null && ::DevConsole.Screen.isConnected()) ::DevConsole.Screen.log(_msg, "warning")
 		logWarning(_msg)
 	}
 	local logError = ::logError
-	::logError = function(_msg)
+	::logError = function(_msg, _dev = true)
 	{
-		if(::DevConsole.Screen != null && ::DevConsole.Screen.isConnected()) ::DevConsole.Screen.log(_msg, "error")
+		if(_dev && ::DevConsole.Screen != null && ::DevConsole.Screen.isConnected()) ::DevConsole.Screen.log(_msg, "error")
 		logError(_msg)
 	}
 })

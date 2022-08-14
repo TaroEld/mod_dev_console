@@ -173,10 +173,13 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 
 	function logEx( _text, _type = "message")
 	{
-		this.m.JSHandle.asyncCall("log", {
-			Text = _text,
-			Type = _type
-		});
+		if (this.m.JSHandle != null)
+		{
+			this.m.JSHandle.asyncCall("log", {
+				Text = _text,
+				Type = _type
+			});
+		}
 	}
 
 	function log( _text, _type = "message")

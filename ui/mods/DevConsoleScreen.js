@@ -1,6 +1,7 @@
 "use strict";
 
 var console_error = console.error;
+
 console.error = function(args)
 {
 	console_error.call(console, args);
@@ -191,42 +192,46 @@ DevConsoleScreen.prototype.updateColorSettings = function ()
 		this.mOutputContainer.css("background-color", "rgba(" + this.mColors.BackgroundColor + ")");
 	}
 
-    if (this.mCurrentEntries != null)
-    {
-    	this.mCurrentEntries.forEach($.proxy(function(_entry){
-    	    _entry.css("color", "rgba(" + this.mColors[_entry.data("type")] + ")");
-    	}, this))
-    }
+	$(".log-entry").each(function(){
+	    $(this).css("color", "rgba(" + self.mColors[$(this).data("type")] + ")");
+	})
 }
 
 DevConsoleScreen.prototype.log = function(_message)
 {
-	if (this.mOutputScrollContainer == null)
-		return
-    var entry = this.createEventLogEntryDIV(_message.Text, _message.Type);
-    if (entry !== null)
-    {
-        if (this.mOutputScrollContainer.children().length > this.mMaxVisibleEntries)
-        {
-            var firstDiv = this.mOutputScrollContainer.children(':first');
-            if (firstDiv.length > 0)
-            {
-                firstDiv.remove();
-            }
-        }
-        this.mOutputScrollContainer.append(entry);
-        this.mCurrentEntries.push(entry);
-        this.mOutputContainer.scrollListToBottom();
-    }
+	var self = this;
+	this.mMessageQueue.push(_message);
+	if (this.mTimerHandle !== null)
+	{
+		this.mTimerHandle = clearTimeout(this.mTimerHandle);
+	}
+	this.mTimerHandle = setTimeout(function() {
+		self.processQueue();
+	}, 10);
+}
+
+DevConsoleScreen.prototype.processQueue = function()
+{
+	var self = this;
+	this.mMessageQueue.forEach(function(_message){
+		if (self.mOutputScrollContainer == null || _message.Text === null || typeof(_message.Text) != 'string')
+			return
+	    var entry = self.createEventLogEntryDIV(_message.Text, _message.Type);
+	    if (self.mOutputScrollContainer.children().length > self.mMaxVisibleEntries)
+	    {
+	        var firstDiv = self.mOutputScrollContainer.children(':first');
+	        if (firstDiv.length > 0)
+	        {
+	            firstDiv.remove();
+	        }
+	    }
+	    self.mOutputScrollContainer.append(entry);
+	})
+	self.scrollToBottom();
 }
 
 DevConsoleScreen.prototype.createEventLogEntryDIV = function (_text, _type)
 {
-    if (_text === null || typeof(_text) != 'string')
-    {
-        return null;
-    }
-
     var entry = $('<div class="log-entry text-font-small"></div>');
     entry.data("type", _type);
     entry.css("color", "rgba(" + this.mColors[_type] + ")");
