@@ -341,7 +341,16 @@ DevConsoleScreen.prototype.adjustDivHeights = function ()
 
 DevConsoleScreen.prototype.scrollToBottom = function()
 {
-	this.mOutputContainer.scrollListToBottom();
+	var scrollContainer = this.mOutputContainer.findListScrollContainer();
+	var element = scrollContainer.children(':last');
+	if(element[0] == undefined)
+		return scrollContainer;
+
+	var offsets = scrollContainer[0].offsetTop;
+	self.trigger('scroll', { top: element[0].offsetTop, duration: 1, animate: 'linear', scrollTo: 'bottom' });
+	self.trigger('update', true);
+
+	return this;
 }
 
 DevConsoleScreen.prototype.notifyBackendRunCommand = function(_command)
