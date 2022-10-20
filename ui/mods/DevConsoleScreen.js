@@ -9,7 +9,11 @@ console.error = function(args)
 }
 
 var DevConsole = {
-	mModID : "mod_dev_console"
+	mModID : "mod_dev_console",
+	Environments : {
+		Squirrel : 0,
+		JS : 1,
+	}
 }
 
 var DevConsoleScreen = function(_parent)
@@ -30,7 +34,7 @@ var DevConsoleScreen = function(_parent)
 
     this.mLatestCommandArray = [];
     this.mLatestCommandIndex = 0;
-    this.mEnvironment = true;
+    this.mEnvironment = DevConsole.Environments.Squirrel;
 
     // constants
     this.mMaxVisibleEntries = 1000;
@@ -105,7 +109,7 @@ DevConsoleScreen.prototype.createDIV = function (_parentDiv)
     footerButtonBar.append(layout);
     this.mEnvButton = layout.createTextButton("Squirrel", function ()
     {
-        self.setEnvironment(!self.mEnvironment);
+        self.toggleEnvironment();
         self.mInputCommandContainer.focus();
     }, '', 4);
     
@@ -168,10 +172,15 @@ DevConsoleScreen.prototype.destroyDIV = function ()
     this.mContainer = null;
 };
 
+DevConsoleScreen.prototype.toggleEnvironment = function()
+{
+	this.setEnvironment(this.mEnvironment == DevConsole.Environments.Squirrel ? DevConsole.Environments.JS : DevConsole.Environments.Squirrel);
+}
+
 DevConsoleScreen.prototype.setEnvironment = function (_env)
 {
     this.mEnvironment = _env;
-    if(this.mEnvironment)
+    if(this.mEnvironment ==  DevConsole.Environments.Squirrel)
     {
     	this.mInputCommandContainer.removeClass("font-color-JS").addClass("font-color-brother-name")
         this.mEnvButton.changeButtonText("Squirrel");
@@ -288,7 +297,7 @@ DevConsoleScreen.prototype.checkRunCommand = function (_inConsole)
 {
     var command = this.mInputCommandContainer.getInputText();
     this.insertCommand(command);
-    if(this.mEnvironment == true)
+    if(this.mEnvironment == DevConsole.Environments.Squirrel)
     {
         this.notifyBackendRunCommand(command);
     }
