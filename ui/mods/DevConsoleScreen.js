@@ -241,6 +241,7 @@ DevConsoleScreen.prototype.processQueue = function()
 	    }
 	    self.mOutputScrollContainer.append(entry);
 	})
+	this.mMessageQueue = [];
 	self.scrollToBottom();
 }
 
