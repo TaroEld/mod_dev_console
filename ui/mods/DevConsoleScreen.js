@@ -341,6 +341,8 @@ DevConsoleScreen.prototype.adjustDivHeights = function ()
 
 DevConsoleScreen.prototype.scrollToBottom = function()
 {
+	if (!this.mIsVisible)
+		return;
 	var scrollContainer = this.mOutputContainer.findListScrollContainer();
 	var element = scrollContainer.children(':last');
 	if(element[0] == undefined)
