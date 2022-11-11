@@ -243,7 +243,7 @@ DevConsoleScreen.prototype.processQueue = function()
 	    self.mOutputScrollContainer.append(entry);
 	})
 	this.mMessageQueue = [];
-	self.scrollToBottom();
+	this.scrollToBottom();
 }
 
 DevConsoleScreen.prototype.createEventLogEntryDIV = function (_text, _type)
