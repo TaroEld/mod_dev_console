@@ -302,16 +302,16 @@ DevConsoleScreen.prototype.checkRunCommand = function (_inConsole)
     if(this.mEnvironment == DevConsole.Environments.Squirrel)
     this.addPreviousCommand(command);
     SQ.call(this.mSQHandle, 'addPreviousCommand', [command, this.mEnvironment]);
+    if ( !_inConsole)
+    {
+        this.notifyBackendHide();
+    }
     {
         this.notifyBackendRunCommand(command);
     }
     else
     {
         this.runCommandInJs(command);
-    }
-    if ( !_inConsole)
-    {
-        this.notifyBackendHide();
     }
 };
 
