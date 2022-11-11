@@ -299,13 +299,13 @@ DevConsoleScreen.prototype.setPreviousCommands = function (_data)
 DevConsoleScreen.prototype.checkRunCommand = function (_inConsole)
 {
     var command = this.mInputCommandContainer.getInputText();
-    if(this.mEnvironment == DevConsole.Environments.Squirrel)
     this.addPreviousCommand(command);
     SQ.call(this.mSQHandle, 'addPreviousCommand', [command, this.mEnvironment]);
     if ( !_inConsole)
     {
         this.notifyBackendHide();
     }
+    if (this.mEnvironment == DevConsole.Environments.Squirrel)
     {
         this.notifyBackendRunCommand(command);
     }
