@@ -54,13 +54,6 @@ Object.defineProperty(DevConsoleScreen.prototype, 'constructor', {
     writable: true
 });
 
-DevConsoleScreen.prototype.onShow = function()
-{
-	this.mInputCommandContainer.focus();
-	this.adjustDivHeights()
-	this.scrollToBottom();
-}
-
 DevConsoleScreen.prototype.createDIV = function (_parentDiv)
 {
 	this.updateColorSettings();
@@ -171,6 +164,14 @@ DevConsoleScreen.prototype.destroyDIV = function ()
     this.mContainer.remove();
     this.mContainer = null;
 };
+
+DevConsoleScreen.prototype.onShow = function()
+{
+	this.mInputCommandContainer.focus();
+	this.adjustDivHeights()
+	this.scrollToBottom();
+}
+
 
 DevConsoleScreen.prototype.toggleEnvironment = function()
 {
