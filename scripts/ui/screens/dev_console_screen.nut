@@ -123,7 +123,6 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		local cmd = _data
 		if (cmd == null || cmd == "") return;
 
-		this.addPreviousCommand([cmd, true]);
 		this.updatePreviousCommands()
 
 		//remove ominous ctrl character

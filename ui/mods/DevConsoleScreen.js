@@ -301,12 +301,12 @@ DevConsoleScreen.prototype.checkRunCommand = function (_inConsole)
     var command = this.mInputCommandContainer.getInputText();
     if(this.mEnvironment == DevConsole.Environments.Squirrel)
     this.addPreviousCommand(command);
+    SQ.call(this.mSQHandle, 'addPreviousCommand', [command, this.mEnvironment]);
     {
         this.notifyBackendRunCommand(command);
     }
     else
     {
-        SQ.call(this.mSQHandle, 'addPreviousCommand', [command, false]);
         this.runCommandInJs(command);
     }
     if ( !_inConsole)
