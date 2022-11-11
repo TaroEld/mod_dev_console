@@ -421,12 +421,14 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
         var data = self.data('input');
         var inputDeniedUntil = data.inputDeniedUntil || 0;
         var inputDelay = inputDeniedUntil == 0 ? 40 : 500;
+        var runCommand = MSU.Keybinds.isKeybindPressed(DevConsole.mModID, "RunCommand", _event);
+        var runCommmandInConsole = MSU.Keybinds.isKeybindPressed(DevConsole.mModID, "RunCommandInConsole", _event);
 
-        if (MSU.Keybinds.isKeybindPressed(DevConsole.mModID, "RunInConsole", _event))
+        if (runCommand || runCommmandInConsole)
         {
         	if (!data.inputDenied)
         	{
-        		Screens.DevConsoleScreen.checkRunCommand(true);
+        		Screens.DevConsoleScreen.checkRunCommand(runCommmandInConsole);
         		data.inputDenied = true;
         		self.data("input", data)
         	}
