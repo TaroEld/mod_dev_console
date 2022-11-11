@@ -269,10 +269,11 @@ DevConsoleScreen.prototype.clearConsole = function()
     this.adjustDivHeights();
 }
 
-DevConsoleScreen.prototype.insertCommand = function (_command)
+DevConsoleScreen.prototype.addPreviousCommand = function (_command)
 {
     this.mLatestCommandArray.splice(0, 0, [_command, this.mEnvironment])
-    if(this.mLatestCommandArray.length > 10) this.mLatestCommandArray.pop()
+    if (this.mLatestCommandArray.length > 10)
+    	this.mLatestCommandArray.pop()
 };
 
 DevConsoleScreen.prototype.changeLatestInput = function (_data)
@@ -298,8 +299,8 @@ DevConsoleScreen.prototype.setPreviousCommands = function (_data)
 DevConsoleScreen.prototype.checkRunCommand = function (_inConsole)
 {
     var command = this.mInputCommandContainer.getInputText();
-    this.insertCommand(command);
     if(this.mEnvironment == DevConsole.Environments.Squirrel)
+    this.addPreviousCommand(command);
     {
         this.notifyBackendRunCommand(command);
     }
