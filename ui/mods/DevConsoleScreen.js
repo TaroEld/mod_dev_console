@@ -352,8 +352,8 @@ DevConsoleScreen.prototype.scrollToBottom = function()
 		return scrollContainer;
 
 	var offsets = scrollContainer[0].offsetTop;
-	self.trigger('scroll', { top: element[0].offsetTop, duration: 1, animate: 'linear', scrollTo: 'bottom' });
-	self.trigger('update', true);
+	scrollContainer.trigger('scroll', { top: element[0].offsetTop, duration: 1, animate: 'linear', scrollTo: 'bottom' });
+	scrollContainer.trigger('update', true);
 
 	return this;
 }
