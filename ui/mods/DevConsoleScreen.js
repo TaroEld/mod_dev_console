@@ -324,6 +324,7 @@ DevConsoleScreen.prototype.runCommandInJs = function (command)
     {
     	console.error("Output: " + ret);
     }
+    console.error("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
 };
 
 DevConsoleScreen.prototype.adjustDivHeights = function ()
