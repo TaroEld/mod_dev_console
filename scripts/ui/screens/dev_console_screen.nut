@@ -187,10 +187,14 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 
 	function updatePreviousCommands()
 	{
-		if(this.m.PreviousCommands.len() == 0) return
+		if(this.m.PreviousCommands.len() == 0)
+			return
 		local activeState = ::MSU.Utils.getActiveState();
-		if(activeState.ClassName == "main_menu_state") return;
-		foreach(idx, command in this.m.PreviousCommands)
+		if (activeState.ClassName == "main_menu_state")
+			return;
+		if (activeState.ClassName == "tactical_state" && this.Tactical.State.isScenarioMode())
+			return
+		foreach (idx, command in this.m.PreviousCommands)
 		{
 			this.World.Statistics.getFlags().set("DevCommand" + idx, command[0])
 			this.World.Statistics.getFlags().set("DevCommandEnv" + idx, command[1])
@@ -201,7 +205,10 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	function setPreviousCommands()
 	{
 		local activeState = ::MSU.Utils.getActiveState();
-		if(activeState.ClassName == "main_menu_state") return;
+		if (activeState.ClassName == "main_menu_state")
+			return;
+		if (activeState.ClassName == "tactical_state" && this.Tactical.State.isScenarioMode())
+			return
 		this.m.PreviousCommands.clear();
 		for (local i = 10; i != -1; i--)
 		{
