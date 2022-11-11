@@ -33,19 +33,22 @@
 	local logInfo = ::logInfo
 	::logInfo = function(_msg, _dev = true)
 	{
-		if(_dev && ::DevConsole.Screen != null && ::DevConsole.Screen.isConnected()) ::DevConsole.Screen.log(_msg)
-		logInfo(_msg)
+		if(_dev && ::DevConsole.Screen != null && ::DevConsole.Screen.isConnected())
+			::DevConsole.Screen.log(_msg);
+		return logInfo(_msg);
 	}
 	local logWarning = ::logWarning
 	::logWarning = function(_msg, _dev = true)
 	{
-		if(_dev && ::DevConsole.Screen != null && ::DevConsole.Screen.isConnected()) ::DevConsole.Screen.log(_msg, "warning")
-		logWarning(_msg)
+		if(_dev && ::DevConsole.Screen != null && ::DevConsole.Screen.isConnected())
+			::DevConsole.Screen.log(_msg, "warning");
+		return logWarning(_msg);
 	}
 	local logError = ::logError
 	::logError = function(_msg, _dev = true)
 	{
-		if(_dev && ::DevConsole.Screen != null && ::DevConsole.Screen.isConnected()) ::DevConsole.Screen.log(_msg, "error")
-		logError(_msg)
+		if(_dev && ::DevConsole.Screen != null && ::DevConsole.Screen.isConnected())
+			::DevConsole.Screen.log(_msg, "error");
+		return  logError(_msg);
 	}
 })

@@ -181,7 +181,8 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	function addPreviousCommand(_data)
 	{
 		this.m.PreviousCommands.insert(0, _data);
-		if(this.m.PreviousCommands.len() > 10) this.m.PreviousCommands.pop();
+		if (this.m.PreviousCommands.len() > 10)
+			this.m.PreviousCommands.pop();
 	}
 
 	function updatePreviousCommands()
