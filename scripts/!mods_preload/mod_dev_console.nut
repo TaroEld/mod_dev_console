@@ -29,16 +29,6 @@
 	generalPage.addColorPickerSetting("message", "36,140,182, 1.0", "Font Color logInfo");
 	generalPage.addColorPickerSetting("warning", "241,90,34,1.0", "Font Color logWarning");
 	generalPage.addColorPickerSetting("error", "255,0,0,1.0", "Font Color logError");
-	local resetButton = generalPage.addButtonSetting("reset", null, "Reset Settings");
-	resetButton.addCallback(function(_data = null){
-		foreach(setting in ::DevConsole.Mod.ModSettings.getAllSettings())
-		{
-			if(setting.getID() != "reset")
-			{
-				setting.reset();
-			}
-		}
-	})
 
 	local logInfo = ::logInfo
 	::logInfo = function(_msg, _dev = true)
