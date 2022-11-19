@@ -64,14 +64,6 @@
     z-index: 999999;
 }*/
 
-textarea
-{
-    -moz-user-select: -moz-text;
-    -webkit-user-select: text;
-    user-select: text;
-}
-
-
 .font-color-JS
 {
 	color: red !important;
@@ -107,7 +99,7 @@ textarea
     line-height: 3.0rem;
 }
 
-.custom-input-width
+.console-textarea
 {
 	background-image: none !important;
 	background-color: black !important;
@@ -115,6 +107,9 @@ textarea
 	background-size: 100% 100% !important;
 	background-repeat: no-repeat;
 	overflow: scroll;
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
+    -webkit-user-select: text !important;
 }
 
 .mod-log-module
