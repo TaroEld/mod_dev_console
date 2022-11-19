@@ -374,14 +374,14 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
     }
 }
 
- $.fn.mod_createInput = function(_text, _minLength, _maxLength, _tabIndex, _inputUpdatedCallback, _classes, _acceptCallback, _inputid, _inputClickCallback)
+ $.fn.mod_createInput = function(_text, _minLength, _maxLength, _tabIndex, _inputUpdatedCallback)
  {
     var minLength = _minLength || 0;
     var maxLength = _maxLength || null;
     var tabIndex = _tabIndex || null;
 
     // var result = $('<input type="text" class="ui-control"/>');
-    var result = $('<textarea autofocus rows="5" cols="200" type="text" class="text-font-small font-color-brother-name custom-input-width custom-input-width"/>');
+    var result = $('<textarea autofocus rows="5" cols="200" type="text" class="text-font-small font-color-brother-name console-textarea"/>');
     var data = { minLength: _minLength || 0, maxLength: _maxLength || null, inputUpdatedCallback: null, acceptCallback: null, inputDenied: false };
 
     if (maxLength !== null)
@@ -399,18 +399,17 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
         data.inputUpdatedCallback = _inputUpdatedCallback;
     }
 
-    if (_acceptCallback !== undefined && jQuery.isFunction(_acceptCallback))
-    {
-        data.acceptCallback = _acceptCallback;
-    }
+    // result.on('click.input', null, result, function (_event)
+    // {
+    //     if(_inputClickCallback !== undefined && jQuery.isFunction(_inputClickCallback))
+    //     {
+    //         _inputClickCallback($(this));
+    //     }
+    // });
+    result.on("dragstart", function(_event){
+    	console.error("dragstart")
+    })
 
-    result.on('click.input', null, result, function (_event)
-    {
-        if(_inputClickCallback !== undefined && jQuery.isFunction(_inputClickCallback))
-        {
-            _inputClickCallback($(this));
-        }
-    });
 
     // input handler
     result.on('keydown.input', null, result, function (_event)
