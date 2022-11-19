@@ -8,6 +8,7 @@
 {	
 	::mods_registerJS("DevConsoleScreen.js");
 	::mods_registerCSS("DevConsoleScreen.css");
+	::Const.AI.ParallelizationMode = false;
 	
 	::DevConsole.Mod <- ::MSU.Class.Mod(::DevConsole.ID, ::DevConsole.Version, ::DevConsole.Name); 
 	::DevConsole.Mod.Debug.disable(); 
