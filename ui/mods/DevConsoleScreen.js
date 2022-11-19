@@ -169,7 +169,6 @@ DevConsoleScreen.prototype.onShow = function()
 {
 	this.mInputCommandContainer.focus();
 	this.adjustDivHeights()
-	this.scrollToBottom();
 }
 
 
@@ -335,11 +334,12 @@ DevConsoleScreen.prototype.adjustDivHeights = function ()
 	inputContainer.css("height", "auto");
 
 	//depends on lines of content in the input container
-	var inputHeight = Math.min(this.mLogModule.height() / 2.5, inputContainer.prop('scrollHeight')) + 2
+	var inputHeight = Math.min(this.mLogModule.height() / 2.5, inputContainer.prop('scrollHeight')) + 5
 	var outputHeight = Screens.DevConsoleScreen.mLogModule.height() - inputHeight - 100;
 
 	inputContainer.css("height", inputHeight + "px");
 	outputContainer.css("height", outputHeight + "px");
+	this.scrollToBottom();
 };
 
 DevConsoleScreen.prototype.scrollToBottom = function()
