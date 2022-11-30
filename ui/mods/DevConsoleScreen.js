@@ -9,8 +9,7 @@ var DevConsoleScreen = function(_parent)
     this.mTimerHandle = null;
     this.mMessageQueue = [];
 
-    this.mInputCommandContainer = null;
-    this.mInputArgumentContainer = null;
+    this.mInputContainer = null;
 
     this.mOutputContainer = null;
     this.mOutputScrollContainer = null;
@@ -43,61 +42,22 @@ DevConsoleScreen.prototype.createDIV = function (_parentDiv)
     var self = this;
 
     // create: containers (init hidden!)
-    this.mContainer = $('<div class="dialog-screen ui-control dialog-mod display-none opacity-none"/>');
+    this.mContainer = $('<div class="dev-console-main-container display-none"/>');
     _parentDiv.append(this.mContainer);
 
     // create: dialog container
-    var dialogLayout = $('<div class="l-dialog-container-mod"/>');
+    var dialogLayout = $('<div class="dev-console-dialog"/>');
     this.mContainer.append(dialogLayout);
-    this.mDialogContainer = dialogLayout.createDialog('Mod Console', null, null, false);
-    this.mDialogContentContainer = this.mDialogContainer.findDialogContentContainer();
+    this.mLogModule = $('<div class="input-output-container"/>');
+    dialogLayout.append(this.mLogModule);
+    this.createLogContent()
 
-    // create footer button bar
-    var footerButtonBar = $('<div class="l-button-bar"></div>');
-    this.mDialogContainer.findDialogFooterContainer().append(footerButtonBar);
-
-    // create: buttons
-    var layout = $('<div class="l-ok-button"/>');
-    footerButtonBar.append(layout);
-    var button = layout.createTextButton("Run", function ()
-    {
-        self.checkRunCommand();
-        self.mInputCommandContainer.focus();
-    }, '', 4);
-
-    var layout = $('<div class="l-ok-button"/>');
-    footerButtonBar.append(layout);
-    button = layout.createTextButton("Run in console", function ()
-    {
-        self.checkRunCommand(true);
-        self.mInputCommandContainer.focus();
-    }, '', 4);
-
-     var layout = $('<div class="l-ok-button"/>');
-    footerButtonBar.append(layout);
-    button = layout.createTextButton("Clear console", function ()
-    {
-        self.clearConsole();
-        self.mInputCommandContainer.focus();
-    }, '', 4);
-
-    var layout = $('<div class="l-ok-button"/>');
-    footerButtonBar.append(layout);
-    this.mEnvButton = layout.createTextButton("Squirrel", function ()
-    {
-        self.toggleEnvironment();
-        self.mInputCommandContainer.focus();
-    }, '', 4);
-    
-    var layout = $('<div class="l-ok-button"/>');
-    footerButtonBar.append(layout);
-    this.mNoButton = layout.createTextButton("Cancel", function ()
-    {
-        self.notifyBackendHide();
-    }, '', 4);
+    // create footer and  button bar
+    this.mFooter = $('<div class="dev-console-footer"/>');
+    dialogLayout.append(this.mFooter);
+    this.createFooterButtons();
 
     this.mIsVisible = false;
-    this.createLogContent()
 };
 
 DevConsoleScreen.prototype.createLogContent = function ()
@@ -105,16 +65,11 @@ DevConsoleScreen.prototype.createLogContent = function ()
     var self = this;
 
     // create: container
-    this.mLogModule = $('<div class="mod-log-module"/>');
-    this.mDialogContentContainer.append(this.mLogModule);
-
     var inputLayout = $('<div class="devconsole-input-layout"/>').appendTo(this.mLogModule);
     var label = $('<div class="label text-font-normal font-color-label font-bottom-shadow">Command</div>').appendTo(inputLayout);
 
     var textAreaLayout = $('<div class="l-input"/>').appendTo(inputLayout);
-    this.mInputCommandContainer = textAreaLayout.mod_createInput('', 0, 10000, 1, null);
-    // this.mInputCommandContainer = $('<textarea class="text-font-small font-color-brother-name"/>').appendTo(inputLayout);
-    // this.mInputCommandContainer = $('<textarea class="text-font-small font-color-brother-name"/>').appendTo(inputLayout);
+    this.mInputContainer = textAreaLayout.mod_createInput('', 0, 10000, 1, null);
 
     // create: log container
     var outputLayout = $('<div class="devconsole-output-layout"/>').appendTo(this.mLogModule);
@@ -122,6 +77,53 @@ DevConsoleScreen.prototype.createLogContent = function ()
     this.mOutputContainer.css("background-color", "rgba(" + this.mColors.BackgroundColor + ")");
     this.mOutputScrollContainer = this.mOutputContainer.findListScrollContainer();
 };
+
+DevConsoleScreen.prototype.createFooterButtons = function ()
+{
+	 var footerButtonBar = $('<div class="l-button-bar"></div>');
+	this.mFooter.append(footerButtonBar);
+	var self = this;
+
+	 // create: buttons
+	 var layout = $('<div class="l-ok-button"/>');
+	 footerButtonBar.append(layout);
+	 var button = layout.createTextButton("Run", function ()
+	 {
+	     self.checkRunCommand();
+	     self.mInputContainer.focus();
+	 }, '', 4);
+
+	 var layout = $('<div class="l-ok-button"/>');
+	 footerButtonBar.append(layout);
+	 button = layout.createTextButton("Run in console", function ()
+	 {
+	     self.checkRunCommand(true);
+	     self.mInputContainer.focus();
+	 }, '', 4);
+
+	  var layout = $('<div class="l-ok-button"/>');
+	 footerButtonBar.append(layout);
+	 button = layout.createTextButton("Clear console", function ()
+	 {
+	     self.clearConsole();
+	     self.mInputContainer.focus();
+	 }, '', 4);
+
+	 var layout = $('<div class="l-ok-button"/>');
+	 footerButtonBar.append(layout);
+	 this.mEnvButton = layout.createTextButton("Squirrel", function ()
+	 {
+	     self.toggleEnvironment();
+	     self.mInputContainer.focus();
+	 }, '', 4);
+
+	 var layout = $('<div class="l-ok-button"/>');
+	 footerButtonBar.append(layout);
+	 this.mNoButton = layout.createTextButton("Cancel", function ()
+	 {
+	     self.notifyBackendHide();
+	 }, '', 4);
+}
 
 DevConsoleScreen.prototype.destroyDIV = function ()
 {
@@ -131,8 +133,8 @@ DevConsoleScreen.prototype.destroyDIV = function ()
     this.mOutputContainer.remove();
     this.mOutputContainer = null;
 
-    this.mInputCommandContainer.empty();
-    this.mInputCommandContainer = null;
+    this.mInputContainer.empty();
+    this.mInputContainer = null;
 
     if (this.mContentContainer != null){
         this.mContentContainer.remove();
@@ -163,12 +165,13 @@ DevConsoleScreen.prototype.enlarge = function ()
 	this.mContainer.css("height", "100%")
 	this.onShow();
 };
+
+
 DevConsoleScreen.prototype.onShow = function()
 {
-	this.mInputCommandContainer.focus();
+	this.mInputContainer.focus();
 	this.adjustDivHeights()
 }
-
 
 DevConsoleScreen.prototype.toggleEnvironment = function()
 {
@@ -180,12 +183,12 @@ DevConsoleScreen.prototype.setEnvironment = function (_env)
     this.mEnvironment = _env;
     if(this.mEnvironment ==  DevConsole.Environments.Squirrel)
     {
-    	this.mInputCommandContainer.removeClass("font-color-JS").addClass("font-color-brother-name")
+    	this.mInputContainer.removeClass("font-color-JS").addClass("font-color-brother-name")
         this.mEnvButton.changeButtonText("Squirrel");
     }
     else
     {
-    	this.mInputCommandContainer.removeClass("font-color-brother-name").addClass("font-color-JS")
+    	this.mInputContainer.removeClass("font-color-brother-name").addClass("font-color-JS")
         this.mEnvButton.changeButtonText("JavaScript");
     }
 }
@@ -260,9 +263,9 @@ DevConsoleScreen.prototype.createEventLogEntryDIV = function (_text, _type)
 
 DevConsoleScreen.prototype.clearConsole = function()
 {
-    this.mInputCommandContainer.val('');
+    this.mInputContainer.val('');
     this.mOutputScrollContainer.empty();
-    this.mInputCommandContainer.focus();
+    this.mInputContainer.focus();
     this.adjustDivHeights();
 }
 
@@ -282,7 +285,7 @@ DevConsoleScreen.prototype.changeLatestInput = function (_data)
     if(nextLen > 10) nextLen = 10;
     if(nextLen == currentLen) nextLen -= 1;
     this.mLatestCommandIndex = nextLen;
-    this.mInputCommandContainer.val(this.mLatestCommandArray[nextLen][0]);
+    this.mInputContainer.val(this.mLatestCommandArray[nextLen][0]);
     this.setEnvironment(this.mLatestCommandArray[nextLen][1])
     return true
 }
@@ -295,7 +298,7 @@ DevConsoleScreen.prototype.setPreviousCommands = function (_data)
 
 DevConsoleScreen.prototype.checkRunCommand = function (_inConsole)
 {
-    var command = this.mInputCommandContainer.getInputText();
+    var command = this.mInputContainer.getInputText();
     this.addPreviousCommand(command);
     SQ.call(this.mSQHandle, 'addPreviousCommand', [command, this.mEnvironment]);
     if ( !_inConsole)
@@ -326,14 +329,14 @@ DevConsoleScreen.prototype.runCommandInJs = function (command)
 
 DevConsoleScreen.prototype.adjustDivHeights = function ()
 {
-	var inputContainer = this.mInputCommandContainer;
+	var inputContainer = this.mInputContainer;
 	var outputContainer = this.mOutputContainer;
 	// set to auto so that scrollheight resets
 	inputContainer.css("height", "auto");
 
 	//depends on lines of content in the input container
 	var inputHeight = Math.min(this.mLogModule.height() / 2.5, inputContainer.prop('scrollHeight')) + 5
-	var outputHeight = Screens.DevConsoleScreen.mLogModule.height() - inputHeight - 100;
+	var outputHeight = Screens.DevConsoleScreen.mLogModule.height() - inputHeight - 50;
 
 	inputContainer.css("height", inputHeight + "px");
 	outputContainer.css("height", outputHeight + "px");
@@ -346,14 +349,13 @@ DevConsoleScreen.prototype.scrollToBottom = function()
 		return;
 	var scrollContainer = this.mOutputContainer.findListScrollContainer();
 	var element = scrollContainer.children(':last');
-	if(element[0] == undefined)
-		return scrollContainer;
+	if (element[0] == undefined)
+		return false;
 
 	var offsets = scrollContainer[0].offsetTop;
 	scrollContainer.trigger('scroll', { top: element[0].offsetTop, duration: 1, animate: 'linear', scrollTo: 'bottom' });
 	scrollContainer.trigger('update', true);
-
-	return this;
+	return true;
 }
 
 DevConsoleScreen.prototype.notifyBackendRunCommand = function(_command)
@@ -396,18 +398,6 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
     {
         data.inputUpdatedCallback = _inputUpdatedCallback;
     }
-
-    // result.on('click.input', null, result, function (_event)
-    // {
-    //     if(_inputClickCallback !== undefined && jQuery.isFunction(_inputClickCallback))
-    //     {
-    //         _inputClickCallback($(this));
-    //     }
-    // });
-    result.on("dragstart", function(_event){
-    	console.error("dragstart")
-    })
-
 
     // input handler
     result.on('keydown.input', null, result, function (_event)

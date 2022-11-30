@@ -1,7 +1,7 @@
 ::DevConsole <- {
 	ID = "mod_dev_console",
 	Version = "1.0.0",
-	Name = "Dev Console"
+	Name = "Dev Console",
 }
 ::mods_registerMod(::DevConsole.ID, ::DevConsole.Version);
 ::mods_queue(::DevConsole.ID, "mod_msu", function()
@@ -21,6 +21,7 @@
 	::DevConsole.JSConnection <- this.new("dev_console/dev_console_js_connection");
 	::MSU.UI.registerConnection(::DevConsole.JSConnection);
 	::MSU.UI.registerConnection(::DevConsole.Screen);
+
 
 	::DevConsole.Mod.Keybinds.addSQKeybind("toggleDevConsoleScreen", "ctrl+g", ::MSU.Key.State.All,  ::DevConsole.Screen.toggle.bindenv( ::DevConsole.Screen));
 	::DevConsole.Mod.Keybinds.addSQKeybind("closeDevConsoleScreen", "escape", ::MSU.Key.State.All,  ::DevConsole.Screen.hide.bindenv( ::DevConsole.Screen));
