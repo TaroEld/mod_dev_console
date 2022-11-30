@@ -149,5 +149,6 @@
 {
     margin-left: 0.7rem;
     margin-right: 0.2rem;
+    overflow-wrap: break-word;
     /*line-height: 1.3rem;*/
 }
