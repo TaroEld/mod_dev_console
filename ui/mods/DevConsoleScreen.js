@@ -148,6 +148,21 @@ DevConsoleScreen.prototype.destroyDIV = function ()
     this.mContainer = null;
 };
 
+DevConsoleScreen.prototype.show = function (_moveLeftRight, _considerParent)
+{
+	this.mIsVisible = true;
+	this.mContainer.css("opacity", 1)
+	this.mContainer.css("height", "50%")
+	this.mContainer.removeClass('display-none').addClass('display-block');
+	this.notifyBackendOnShown();
+	this.onShow();
+};
+
+DevConsoleScreen.prototype.enlarge = function ()
+{
+	this.mContainer.css("height", "100%")
+	this.onShow();
+};
 DevConsoleScreen.prototype.onShow = function()
 {
 	this.mInputCommandContainer.focus();

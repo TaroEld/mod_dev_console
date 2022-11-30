@@ -6,12 +6,18 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			SpawnUnitScript = "",
 			SpawnUnitFaction = this.Const.Faction.Enemy
 		},
+		States = {
+			Hidden = 0,
+			Small = 1,
+			Large = 2
+		}
+		CurrentState = 0
 	},
 
 	function show()
 	{
+		this.m.CurrentState = this.m.States.Small;
 		local activeState = ::MSU.Utils.getActiveState();
-		activeState.onHide();
 		switch(activeState.ClassName)
 		{
 			case "tactical_state":
@@ -19,8 +25,6 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 				activeState.setPause(true);
 				activeState.m.MenuStack.push(function ()
 				{
-					::DevConsole.Screen.hide();
-					this.onShow();
 					this.setPause(false);
 				});
 				break;
@@ -30,19 +34,13 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 				activeState.setAutoPause(true);
 				activeState.m.MenuStack.push(function ()
 				{
-					::DevConsole.Screen.hide();
-					this.onShow();
 					this.setAutoPause(false);
 				});
 				break;
 
 			case "main_menu_state":
 				::DevConsole.Mod.Debug.printWarning("Show in main menu")
-				activeState.m.MenuStack.push(function ()
-				{
-					::DevConsole.Screen.hide();
-					this.onShow();
-				});
+				activeState.m.MenuStack.push(function (){});
 				break;
 		}
 		this.Tooltip.hide();
@@ -50,13 +48,19 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		this.m.JSHandle.asyncCall("show", null);
 		return false;
 	}
+
+	function enlarge()
+	{
+		this.m.CurrentState = this.m.States.Large;
+		this.m.JSHandle.asyncCall("enlarge", null);
+	}
 	
 	function hide()
 	{
+		this.m.CurrentState = this.m.States.Hidden;
 		::DevConsole.Mod.Debug.printWarning("Hide called")
 		if (this.isVisible())
 		{
-			local activeState = ::MSU.Utils.getActiveState();
 			this.updatePreviousCommands()
 			this.m.JSHandle.asyncCall("hide", null);
 			::MSU.Utils.getActiveState().m.MenuStack.pop();
@@ -70,14 +74,17 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		{
 			return false
 		}
-
-		if (this.isVisible())
+		if (this.m.CurrentState == this.m.States.Hidden)
 		{
-			this.hide();
+			this.show();
+		}
+		else if (this.m.CurrentState == this.m.States.Small)
+		{
+			this.enlarge();
 		}
 		else
 		{
-			this.show();
+			this.hide();
 		}
 		return true;
 	}
