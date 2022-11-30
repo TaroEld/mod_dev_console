@@ -31,6 +31,9 @@
 	::DevConsole.Mod.Keybinds.addJSKeybind("RunCommandInConsole", "shift+return");
 	::DevConsole.Mod.Keybinds.addJSKeybind("RunCommand", "shift+ctrl+return");
 
+	::DevConsole.Mod.Keybinds.addSQKeybind("reloadCSS", "ctrl+shift+c", ::MSU.Key.State.All,  ::reloadCSS);
+	::DevConsole.Mod.Keybinds.addSQKeybind("reloadJS", "ctrl+shift+j", ::MSU.Key.State.All,  ::reloadJS);
+
 	local generalPage = ::DevConsole.Mod.ModSettings.addPage("General");
 	generalPage.addBooleanSetting("PrintForParser", false, "Print for Parser", "Prints all lines to the log to be parsed.");
 	generalPage.addColorPickerSetting("BackgroundColor", "0,0,0,1.0", "Background Color");
