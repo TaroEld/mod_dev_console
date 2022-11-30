@@ -59,4 +59,22 @@
 			::DevConsole.Screen.log(_msg, "error");
 		return  logError(_msg);
 	}
+
+	//hook modhooks
+	::mods_hookNewObjectOnce("ui/screens/menu/main_menu_screen", function(o) {
+		local getRegisteredCSSHooks = o.getRegisteredCSSHooks;
+		o.getRegisteredCSSHooks <- function()
+		{
+			::DevConsole.JSConnection.m.RegisteredCSSHooks = getRegisteredCSSHooks();
+			return clone ::DevConsole.JSConnection.m.RegisteredCSSHooks;
+		}
+
+		local getRegisteredJSHooks = o.getRegisteredJSHooks;
+		o.getRegisteredJSHooks <- function()
+		{
+			::DevConsole.JSConnection.m.RegisteredJSHooks = getRegisteredJSHooks();
+			return clone ::DevConsole.JSConnection.m.RegisteredJSHooks;
+		}
+	})
+
 })
