@@ -31,7 +31,6 @@ this.dev_console_js_connection <- ::inherit("scripts/mods/msu/js_connection", {
 
 	function getRegisteredHooks()
 	{
-		::logInfo("getRegisteredHooks getRegisteredHooks")
 		return {
 			css = this.m.RegisteredCSSHooks,
 			js = this.m.RegisteredJSHooks
