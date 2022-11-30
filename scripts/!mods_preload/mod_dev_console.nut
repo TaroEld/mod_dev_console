@@ -6,6 +6,11 @@
 ::mods_registerMod(::DevConsole.ID, ::DevConsole.Version);
 ::mods_queue(::DevConsole.ID, "mod_msu", function()
 {	
+	::include("dev_console/dev_console_js_connection");
+	::include("dev_console/dev_console_utils");
+
+	::mods_registerJS("DevConsoleUtils.js");
+	::mods_registerJS("DevConsoleJSConnection.js");
 	::mods_registerJS("DevConsoleScreen.js");
 	::mods_registerCSS("DevConsoleScreen.css");
 	::Const.AI.ParallelizationMode = false;
@@ -13,6 +18,8 @@
 	::DevConsole.Mod <- ::MSU.Class.Mod(::DevConsole.ID, ::DevConsole.Version, ::DevConsole.Name); 
 	::DevConsole.Mod.Debug.disable(); 
 	::DevConsole.Screen <- this.new("scripts/ui/screens/dev_console_screen");
+	::DevConsole.JSConnection <- this.new("dev_console/dev_console_js_connection");
+	::MSU.UI.registerConnection(::DevConsole.JSConnection);
 	::MSU.UI.registerConnection(::DevConsole.Screen);
 
 	::DevConsole.Mod.Keybinds.addSQKeybind("toggleDevConsoleScreen", "ctrl+g", ::MSU.Key.State.All,  ::DevConsole.Screen.toggle.bindenv( ::DevConsole.Screen));
