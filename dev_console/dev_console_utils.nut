@@ -1,3 +1,16 @@
+::JSONParseToString <- function(_data)
+{
+	this.DevConsole.Screen.JSONParseToString(_data);
+}
+::JSONParseFromString <- function(_string)
+{
+	::DevConsole.Screen.JSONParseFromString(_string)
+}
+::getParsedJSONData <- function()
+{
+	return ::DevConsole.Screen.m.LastParsedData;
+}
+
 //library of useful functions
 ::logConsole <- function(_text = "", _type = "message")
 {
@@ -109,4 +122,14 @@
 			return town;
 		}
 	}
+}
+
+::reloadCSS <- function(_path = null)
+{
+	::DevConsole.JSConnection.reloadCSS(_path);
+}
+
+::reloadJS <- function(_path = null)
+{
+	::DevConsole.JSConnection.reloadJS(_path);
 }
