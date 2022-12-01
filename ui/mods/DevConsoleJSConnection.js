@@ -18,7 +18,6 @@ DevConsoleJSConnection.prototype.onConnection = function(handle)
 {
 	MSUBackendConnection.prototype.onConnection.call(this, handle);
 	var self = this;
-	console.error("onConnection ruins")
 	SQ.call(this.mSQHandle, "getRegisteredHooks", null, function(_tables) {
 		var path;
 		var registeredJS = document.getElementsByTagName("link");

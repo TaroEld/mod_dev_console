@@ -9,7 +9,6 @@ this.dev_console_js_connection <- ::inherit("scripts/mods/msu/js_connection", {
 	function connect()
 	{
 		this.m.JSHandle = this.UI.connect(this.m.ID, this);
-		::logInfo("Connected?")
 	}
 
 	function JSONParseToString(_data)
