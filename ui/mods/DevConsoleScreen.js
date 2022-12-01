@@ -318,13 +318,19 @@ DevConsoleScreen.prototype.checkRunCommand = function (_inConsole)
 DevConsoleScreen.prototype.runCommandInJs = function (command)
 {
 	command = command.replace(/[\u0127]/g, '');
-	console.error("Command: " + command);
-    var ret = Function(command)();
-    if (ret !== undefined && ret !== null)
-    {
-    	console.error("Output: " + ret);
-    }
-    console.error("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
+	command = command.replace("", '');
+	logConsole("Command: " + command);
+	try{
+	    var ret = Function(command)();
+	    if (ret !== undefined && ret !== null)
+	    {
+	    	logConsole("Output: " + ret);
+	    }
+	}
+	catch(err){
+		logConsole("Error in command:\n" + err)
+	}
+   logConsole("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
 };
 
 DevConsoleScreen.prototype.adjustDivHeights = function ()
