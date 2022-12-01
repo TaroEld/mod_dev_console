@@ -6,10 +6,9 @@ var DevConsole = {
 	},
 }
 
-var console_error = console.error;
-
-console.error = function(args)
+var logConsole = function(_args)
 {
-	console_error.call(console, args);
-	if (Screens.DevConsoleScreen) Screens.DevConsoleScreen.log({Text : arguments[0], Type : "error"})
+	console.error.call(console, _args);
+	if (Screens.DevConsoleScreen)
+		Screens.DevConsoleScreen.log({Text : _args, Type : "error"})
 }
