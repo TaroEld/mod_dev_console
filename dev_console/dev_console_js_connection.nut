@@ -2,8 +2,6 @@ this.dev_console_js_connection <- ::inherit("scripts/mods/msu/js_connection", {
 	m = {
 		ID = "DevConsoleJSConnection",
 		LastParsedData = null,
-		RegisteredCSSHooks = [],
-		RegisteredJSHooks = [],
 	}
 
 	function connect()
@@ -26,15 +24,6 @@ this.dev_console_js_connection <- ::inherit("scripts/mods/msu/js_connection", {
 		this.m.LastParsedData <- _data;
 	}
 
-
-
-	function getRegisteredHooks()
-	{
-		return {
-			css = this.m.RegisteredCSSHooks,
-			js = this.m.RegisteredJSHooks
-		}
-	}
 
 	function reloadCSS(_path = null)
 	{

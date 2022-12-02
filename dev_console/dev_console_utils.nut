@@ -127,9 +127,11 @@
 ::reloadCSS <- function(_path = null)
 {
 	::DevConsole.JSConnection.reloadCSS(_path);
+	return true;
 }
 
 ::reloadJS <- function(_path = null)
 {
 	::DevConsole.JSConnection.reloadJS(_path);
+	return true;
 }
