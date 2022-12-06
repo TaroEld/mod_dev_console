@@ -32,7 +32,7 @@
 	::DevConsole.Mod.Keybinds.addJSKeybind("RunCommandInConsole", "shift+return");
 	::DevConsole.Mod.Keybinds.addJSKeybind("RunCommand", "shift+ctrl+return");
 
-	::DevConsole.Mod.Keybinds.addSQKeybind("reloadCSS", "ctrl+c", ::MSU.Key.State.All,  ::reloadCSS);
+	::DevConsole.Mod.Keybinds.addSQKeybind("reloadCSS", "shift+ctrl+c", ::MSU.Key.State.All,  ::reloadCSS);
 	::DevConsole.Mod.Keybinds.addSQKeybind("reloadJS", "ctrl+j", ::MSU.Key.State.All,  ::reloadJS);
 
 	local generalPage = ::DevConsole.Mod.ModSettings.addPage("General");

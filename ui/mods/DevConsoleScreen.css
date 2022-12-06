@@ -35,12 +35,6 @@
 	width: 90%;
 }
 
-.devconsole-output-layout
-{
-	border:1px solid green;
-}
-
-
 .devconsole-input-layout .console-textarea
 {
 	background-image: none !important;
@@ -53,8 +47,6 @@
 	padding-bottom: 0.5rem;
     -webkit-user-select: text !important;
 }
-
-
 
 .devconsole-output-layout .list
 {
@@ -93,7 +85,6 @@
     text-align: center;
     line-height: 3.0rem;
 }
-
 
 .font-color-JS
 {
