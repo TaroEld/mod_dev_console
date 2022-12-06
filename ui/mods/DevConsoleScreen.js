@@ -319,6 +319,9 @@ DevConsoleScreen.prototype.runCommandInJs = function (command)
 {
 	command = command.replace(/[\u0127]/g, '');
 	command = command.replace("", '');
+	command = command.replace(/\u0127/g, '');
+
+
 	logConsole("Command: " + command);
 	try{
 	    var ret = Function(command)();
