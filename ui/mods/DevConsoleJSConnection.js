@@ -16,44 +16,63 @@ DevConsoleJSConnection.prototype.reloadCSS = function(_path)
 {
 	var self = this;
 	var registeredFiles = document.getElementsByTagName("link");
+	var passedPath = _path !== undefined && _path !== null;
 	for (var idx = 0; idx < registeredFiles.length; idx++) {
 		if (_path !== undefined && _path !== null)
 		{
 			if (registeredFiles[idx].href == ("coui://ui/" + _path))
 			{
-				logConsole("updating " + registeredFiles[idx].href)
+				logConsole("Reloading " + registeredFiles[idx].href)
 				registeredFiles[idx].href = registeredFiles[idx].href;
 				return;
 			}
 		}
 		else
 		{
-			logConsole("updating " + registeredFiles[idx].href)
+			logConsole("Reloading " + registeredFiles[idx].href)
 			registeredFiles[idx].href = registeredFiles[idx].href;
 		}
+	}
+	if (passedPath)
+	{
+		logConsole("Did not find CSS file with path " + _path)
 	}
 };
 
 DevConsoleJSConnection.prototype.reloadJS = function(_path)
 {
+	var reload = function(_file)
+	{
+		_file.remove()
+		var js = document.createElement("script");
+		js.src = _file.src;
+		js.type = "text/javascript"
+		document.body.appendChild(js);
+		logConsole("Reloading JS file " + _file.src)
+	}
 	var self = this;
 	var registeredFiles = document.getElementsByTagName("script");
+	var passedPath = _path !== undefined && _path !== null;
 	for (var idx = 0; idx < registeredFiles.length; idx++) {
-		if (_path !== undefined && _path !== null)
+		if (passedPath)
 		{
 			if (registeredFiles[idx].src == ("coui://ui/" + _path))
 			{
-				logConsole("updating " + registeredFiles[idx].src)
-				registeredFiles[idx].src = registeredFiles[idx].src;
+				reload(registeredFiles[idx]);
+				delete reload;
 				return;
 			}
 		}
 		else
 		{
-			logConsole("updating " + registeredFiles[idx].src)
-			registeredFiles[idx].src = registeredFiles[idx].src;
+			reload(registeredFiles[idx]);
 		}
 	}
+	if (passedPath)
+	{
+		logConsole("Did not find JS file with path " + _path)
+	}
+	delete reload;
 };
 
 
