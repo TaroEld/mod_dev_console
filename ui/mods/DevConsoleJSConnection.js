@@ -17,8 +17,10 @@ DevConsoleJSConnection.prototype.reloadCSS = function(_path)
 	var self = this;
 	var registeredFiles = document.getElementsByTagName("link");
 	var passedPath = _path !== undefined && _path !== null;
+	if(!passedPath)
+		logConsole("Reloading all CSS files")
 	for (var idx = 0; idx < registeredFiles.length; idx++) {
-		if (_path !== undefined && _path !== null)
+		if (passedPath)
 		{
 			if (registeredFiles[idx].href == ("coui://ui/" + _path))
 			{
@@ -29,7 +31,6 @@ DevConsoleJSConnection.prototype.reloadCSS = function(_path)
 		}
 		else
 		{
-			logConsole("Reloading " + registeredFiles[idx].href)
 			registeredFiles[idx].href = registeredFiles[idx].href;
 		}
 	}
@@ -48,16 +49,18 @@ DevConsoleJSConnection.prototype.reloadJS = function(_path)
 		js.src = _file.src;
 		js.type = "text/javascript"
 		document.body.appendChild(js);
-		logConsole("Reloading JS file " + _file.src)
 	}
 	var self = this;
 	var registeredFiles = document.getElementsByTagName("script");
 	var passedPath = _path !== undefined && _path !== null;
+	if(!passedPath)
+		logConsole("Reloading all JS files")
 	for (var idx = 0; idx < registeredFiles.length; idx++) {
 		if (passedPath)
 		{
 			if (registeredFiles[idx].src == ("coui://ui/" + _path))
 			{
+				logConsole("Reloading JS file " + registeredFiles[idx].src)
 				reload(registeredFiles[idx]);
 				delete reload;
 				return;
