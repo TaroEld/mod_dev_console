@@ -45,7 +45,14 @@
 	overflow: scroll;
 	padding-top: 0.5rem;
 	padding-bottom: 0.5rem;
-    -webkit-user-select: text !important;
+	-moz-user-select: -moz-text;
+	-webkit-user-select: text;
+	user-select: text;
+    pointer-events: auto;
+}
+.devconsole-output-layout
+{
+	pointer-events: auto;
 }
 
 .devconsole-output-layout .list
@@ -59,6 +66,10 @@
     margin-left: 0.7rem;
     margin-right: 0.2rem;
     overflow-wrap: break-word;
+    -moz-user-select: -moz-text;
+	-webkit-user-select: text;
+	user-select: text;
+    pointer-events: auto;
 }
 
 
