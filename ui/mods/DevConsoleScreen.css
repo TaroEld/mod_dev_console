@@ -101,3 +101,40 @@
 {
 	color: red !important;
 }
+
+.aciSb_resize.desk {
+	z-index:10002;
+	background:url("coui://ui/extern/jquery-aciScrollBar/image/aciScrollBar.desk/resize.png") 0 0 no-repeat;
+}
+.aciSb_track_h.desk {
+	background:url("coui://ui/extern/jquery-aciScrollBar/image/aciScrollBar.desk/track_h.png") 0 0 repeat-x;
+}
+
+.aciSb_track_v.desk {
+	background:url("coui://ui/extern/jquery-aciScrollBar/image/aciScrollBar.desk/track_v.png") 0 0 repeat-y;
+}
+.aciSb_space_t.desk
+ {
+	width:18px;
+	height:18px;
+    z-index:10003;
+	background:url("coui://ui/extern/jquery-aciScrollBar/image/aciScrollBar.desk/end.png") 0 0 no-repeat;
+}
+
+.aciSb_space_b.desk
+ {
+	width:18px;
+	height:18px;
+    z-index:10003;
+	background:url("coui://ui/extern/jquery-aciScrollBar/image/aciScrollBar.desk/end.png") 0 0 no-repeat;
+}
+.aciSb_drag_hg.desk {
+	width:20px;
+	background:url("coui://ui/extern/jquery-aciScrollBar/image/aciScrollBar.desk/drag_g.png") 0 0 no-repeat;
+    z-index:10004;
+}
+.aciSb_drag_vg.desk {
+	height:32px;
+	background:url("coui://ui/extern/jquery-aciScrollBar/image/aciScrollBar.desk/drag_g.png") 0 0 no-repeat;
+    z-index:10004;
+}
