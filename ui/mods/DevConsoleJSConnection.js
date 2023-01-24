@@ -15,26 +15,20 @@ Object.defineProperty(DevConsoleJSConnection.prototype, 'constructor', {
 DevConsoleJSConnection.prototype.reloadCSS = function(_path)
 {
 	var self = this;
+	var done = false;
 	var registeredFiles = document.getElementsByTagName("link");
 	var passedPath = _path !== undefined && _path !== null;
 	if(!passedPath)
 		logConsole("Reloading all CSS files")
-	for (var idx = 0; idx < registeredFiles.length; idx++) {
-		if (passedPath)
-		{
-			if (registeredFiles[idx].href == ("coui://ui/" + _path))
-			{
-				logConsole("Reloading " + registeredFiles[idx].href)
-				registeredFiles[idx].href = registeredFiles[idx].href;
-				return;
-			}
-		}
-		else
-		{
-			registeredFiles[idx].href = registeredFiles[idx].href;
-		}
-	}
-	if (passedPath)
+
+	var queryString = '?reload=' + new Date().getTime();
+	$('link[rel="stylesheet"]').each(function () {
+		if (done)
+			return
+		done = passedPath && this.href == ("coui://ui/" + _path)
+	    this.href = this.href.replace(/\?.*|$/, queryString);
+	});
+	if (passedPath && !done)
 	{
 		logConsole("Did not find CSS file with path " + _path)
 	}
