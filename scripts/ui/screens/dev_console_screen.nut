@@ -173,10 +173,15 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	{
 		if (this.m.JSHandle != null)
 		{
-			this.m.JSHandle.asyncCall("log", {
-				Text = _text,
-				Type = _type
-			});
+			try {
+				this.m.JSHandle.call("log", {
+					Text = _text,
+					Type = _type
+				});
+			}
+			catch (exception){
+				::logError("Dev console would have crashed for some reason")
+			}
 		}
 	}
 
