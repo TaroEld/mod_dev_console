@@ -324,6 +324,7 @@ DevConsoleScreen.prototype.runCommandInJs = function (command)
 
 
 	logConsole("Command: " + command);
+	logConsole("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
 	try{
 	    var ret = Function(command)();
 	    if (ret !== undefined && ret !== null)

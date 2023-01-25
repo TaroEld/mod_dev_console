@@ -140,6 +140,7 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		}
 
 		this.logInfo("Command: " + cmd)
+		::logInfo("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
 
 		local compiledScript, output;
 		try {
