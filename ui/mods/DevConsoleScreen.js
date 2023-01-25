@@ -318,8 +318,9 @@ DevConsoleScreen.prototype.checkRunCommand = function (_inConsole)
 DevConsoleScreen.prototype.runCommandInJs = function (command)
 {
 	command = command.replace(/[\u0127]/g, '');
-	command = command.replace("", '');
 	command = command.replace(/\u0127/g, '');
+	command = command.replace("", '');
+	command = command.replace(//g, '');
 
 
 	logConsole("Command: " + command);
