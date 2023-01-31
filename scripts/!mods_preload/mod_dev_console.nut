@@ -20,20 +20,11 @@
 	::MSU.UI.registerConnection(::DevConsole.JSConnection);
 	::MSU.UI.registerConnection(::DevConsole.Screen);
 
+	::include("dev_console/keybinds");
 
-	::DevConsole.Mod.Keybinds.addSQKeybind("toggleDevConsoleScreen", "ctrl+g", ::MSU.Key.State.All,  ::DevConsole.Screen.toggle.bindenv( ::DevConsole.Screen));
-	::DevConsole.Mod.Keybinds.addSQKeybind("closeDevConsoleScreen", "escape", ::MSU.Key.State.All,  ::DevConsole.Screen.hide.bindenv( ::DevConsole.Screen));
-	::DevConsole.Mod.Keybinds.addSQKeybind("onUpPressedDevConsoleScreen", "ctrl+up", ::MSU.Key.State.All, ::DevConsole.Screen.onUpArrowPressed.bindenv( ::DevConsole.Screen));
-	::DevConsole.Mod.Keybinds.addSQKeybind("onDownPressedDevConsoleScreen", "ctrl+down",  ::MSU.Key.State.All, ::DevConsole.Screen.onDownArrowPressed.bindenv( ::DevConsole.Screen));
-	::DevConsole.Mod.Keybinds.addSQKeybind("onSpawnUnitDevConsoleScreen", "ctrl+z", ::MSU.Key.State.Tactical, ::DevConsole.Screen.onSpawnUnitPressed.bindenv( ::DevConsole.Screen));
-
-	::DevConsole.Mod.Keybinds.addJSKeybind("RunCommandInConsole", "shift+return");
-	::DevConsole.Mod.Keybinds.addJSKeybind("RunCommand", "shift+ctrl+return");
-
-	::DevConsole.Mod.Keybinds.addSQKeybind("reloadCSS", "shift+ctrl+c", ::MSU.Key.State.All,  ::reloadCSS);
-	::DevConsole.Mod.Keybinds.addSQKeybind("reloadJS", "ctrl+j", ::MSU.Key.State.All,  ::reloadJS);
 
 	local generalPage = ::DevConsole.Mod.ModSettings.addPage("General");
+	generalPage.addBooleanSetting("EnableDebugKeybinds", false, "Enable debug keybinds", "Enables debug keybinds.");
 	generalPage.addBooleanSetting("PrintForParser", false, "Print for Parser", "Prints all lines to the log to be parsed.");
 	generalPage.addColorPickerSetting("BackgroundColor", "0,0,0,1.0", "Background Color");
 	generalPage.addColorPickerSetting("message", "36,140,182, 1.0", "Font Color logInfo");
