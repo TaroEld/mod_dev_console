@@ -251,13 +251,14 @@ DevConsoleScreen.prototype.createEventLogEntryDIV = function (_text, _type)
     var entry = $('<div class="log-entry text-font-small"></div>');
     entry.data("type", _type);
     entry.css("color", "rgba(" + this.mColors[_type] + ")");
-    var parsedText = XBBCODE.process({
-        text: _text,
-        removeMisalignedTags: false,
-        addInLineBreaks: true
-    });
+    // var parsedText = XBBCODE.process({
+    //     text: _text,
+    //     removeMisalignedTags: false,
+    //     addInLineBreaks: true
+    // });
 
-    entry.html(parsedText.html);
+    // entry.html(parsedText.html);
+    entry.html(_text);
     return entry;
 };
 
