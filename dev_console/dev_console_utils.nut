@@ -1,14 +1,14 @@
 ::JSONParseToString <- function(_data)
 {
-	this.DevConsole.Screen.JSONParseToString(_data);
+	this.DevConsole.JSConnection.JSONParseToString(_data);
 }
 ::JSONParseFromString <- function(_string)
 {
-	::DevConsole.Screen.JSONParseFromString(_string)
+	::DevConsole.JSConnection.JSONParseFromString(_string)
 }
 ::getParsedJSONData <- function()
 {
-	return ::DevConsole.Screen.m.LastParsedData;
+	return ::DevConsole.JSConnection.m.LastParsedData;
 }
 
 //library of useful functions
