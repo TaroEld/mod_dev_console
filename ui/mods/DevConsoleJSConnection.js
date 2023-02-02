@@ -17,18 +17,26 @@ DevConsoleJSConnection.prototype.reloadCSS = function(_path)
 	var self = this;
 	var done = false;
 	var registeredFiles = document.getElementsByTagName("link");
-	var passedPath = _path !== undefined && _path !== null;
-	if(!passedPath)
+	var filePath = _path === undefined ? false : "coui://ui/" + _path
+	if(!filePath)
 		logConsole("Reloading all CSS files")
 
 	var queryString = '?reload=' + new Date().getTime();
 	$('link[rel="stylesheet"]').each(function () {
-		if (done)
-			return
-		done = passedPath && this.href == ("coui://ui/" + _path)
+		if (done) return;
+		if (filePath)
+		{
+			if (this.href.split("?")[0] === filePath)
+			{
+				done = true;
+				this.href = this.href.replace(/\?.*|$/, queryString);
+				logConsole("Reloaded " + filePath)
+			}
+			return;
+		}
 	    this.href = this.href.replace(/\?.*|$/, queryString);
 	});
-	if (passedPath && !done)
+	if (filePath && !done)
 	{
 		logConsole("Did not find CSS file with path " + _path)
 	}
