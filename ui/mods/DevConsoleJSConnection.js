@@ -17,14 +17,14 @@ DevConsoleJSConnection.prototype.reloadCSS = function(_path)
 	var self = this;
 	var done = false;
 	var registeredFiles = document.getElementsByTagName("link");
-	var filePath = _path === undefined ? false : "coui://ui/" + _path
-	if(!filePath)
+	var filePath = _path === null ? null : "coui://ui/" + _path
+	if(filePath === null)
 		logConsole("Reloading all CSS files")
 
 	var queryString = '?reload=' + new Date().getTime();
 	$('link[rel="stylesheet"]').each(function () {
 		if (done) return;
-		if (filePath)
+		if (filePath !== null)
 		{
 			if (this.href.split("?")[0] === filePath)
 			{
@@ -36,7 +36,7 @@ DevConsoleJSConnection.prototype.reloadCSS = function(_path)
 		}
 	    this.href = this.href.replace(/\?.*|$/, queryString);
 	});
-	if (filePath && !done)
+	if (filePath !== null && !done)
 	{
 		logConsole("Did not find CSS file with path " + _path)
 	}
