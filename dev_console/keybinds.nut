@@ -16,9 +16,9 @@
 ::DevConsole.Mod.Keybinds.addSQKeybind("reloadCSS", "ctrl+c", ::MSU.Key.State.All,  ::reloadCSS, "Reload CSS", null, "Reloads all CSS files.");
 ::DevConsole.Mod.Keybinds.addSQKeybind("reloadJS", "ctrl+shift+j", ::MSU.Key.State.All,  ::reloadJS, "Reload JS", null, "Reloads all JS files.");
 
-local function getKeySettingVal()
+local function canExecuteBind()
 {
-	return ::DevConsole.Mod.ModSettings.getSetting("EnableDebugKeybinds").getValue();
+	return ::DevConsole.Mod.ModSettings.getSetting("EnableDebugKeybinds").getValue() && !::DevConsole.Screen.isVisible();
 }
 
 ::DevConsole.Mod.Keybinds.addDivider("DebugBinds");
@@ -27,7 +27,7 @@ local function getKeySettingVal()
 
 //Debug
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldJump", "j", ::MSU.Key.State.World, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	if (::World.State.m.LastTileHovered != null)
 	{
@@ -39,28 +39,28 @@ local function getKeySettingVal()
 }, "Jump");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldReveal", "f1", ::MSU.Key.State.World, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.World.setFogOfWar(!this.World.isUsingFogOfWar());
 	::logConsole("Debug: Fog of War: " + this.World.isUsingFogOfWar());
 }, "Reveal Map");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldGlory", "g", ::MSU.Key.State.World, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.World.Assets.addBusinessReputation(500);
 	::logConsole("Debug: Added 500 renown");
 }, "Add 500 renown");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldHunger", "h", ::MSU.Key.State.World, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.World.Assets.setConsumingAssets(!this.World.Assets.isConsumingAssets());
 	::logConsole("Debug: Consuming assets: " + this.World.Assets.isConsumingAssets());
 }, "Enable/Disable asset consumption");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldLevel", "l", ::MSU.Key.State.World, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	if (!::World.State.isInCharacterScreen())
 		return
@@ -74,7 +74,7 @@ local function getKeySettingVal()
 }, "Level Bros");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldKill", "k", ::MSU.Key.State.World, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	if (::World.State.m.LastEntityHovered == null)
 		return
@@ -109,7 +109,7 @@ local function getKeySettingVal()
 }, "Kill Hovered Entity");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldRelations", "l", ::MSU.Key.State.World, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	local factionTypes = {
 	  villages = this.World.FactionManager.getFactionsOfType(this.Const.FactionType.Settlement),
@@ -124,7 +124,7 @@ local function getKeySettingVal()
 }, "Add 10 relations to each faction");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldMoney", "m", ::MSU.Key.State.World, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.World.Assets.addMoney(10000);
 	::World.State.updateTopbarAssets();
@@ -132,7 +132,7 @@ local function getKeySettingVal()
 }, "Add 10000 crowns.");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldUnkillable", "u", ::MSU.Key.State.World, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	::World.State.m.Player.setAttackable(!::World.State.m.Player.isAttackable());
 	::logConsole("Debug: Player attackable: " + ::World.State.m.Player.isAttackable());
@@ -140,49 +140,49 @@ local function getKeySettingVal()
 
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed4", "3", ::MSU.Key.State.World, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.setPause(false);
 	this.World.setSpeedMult(4.0);
 	::logConsole("Debug: Set speed mult to 4.0")
 }, "World Speed 4x");
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed8", "4", ::MSU.Key.State.World, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.setPause(false);
 	this.World.setSpeedMult(8.0);
 	::logConsole("Debug: Set speed mult to 8.0")
 }, "World Speed 8x");
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed16", "5", ::MSU.Key.State.World, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.setPause(false);
 	this.World.setSpeedMult(16.0);
 	::logConsole("Debug: Set speed mult to 16.0")
 }, "World Speed 16x");
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed32", "6", ::MSU.Key.State.World, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.setPause(false);
 	this.World.setSpeedMult(32.0);
 	::logConsole("Debug: Set speed mult to 32.0")
 }, "World Speed 32x");
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed64", "7", ::MSU.Key.State.World, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.setPause(false);
 	this.World.setSpeedMult(64.0);
 	::logConsole("Debug: Set speed mult to 64.0")
 }, "World Speed 64x");
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed128", "8", ::MSU.Key.State.World, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.setPause(false);
 	this.World.setSpeedMult(128.0);
 	::logConsole("Debug: Set speed mult to 128.0")
 }, "World Speed 128x");
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed256", "9", ::MSU.Key.State.World, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.setPause(false);
 	this.World.setSpeedMult(256.0);
@@ -194,7 +194,7 @@ local function getKeySettingVal()
 ::DevConsole.Mod.Keybinds.addTitle("DebugTacticalTitle", "Tactical Debug Keybinds");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalReveal", "e", ::MSU.Key.State.Tactical, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	local state = ::Tactical.State;
 	state.m.IsFogOfWarVisible = !state.m.IsFogOfWarVisible;
@@ -211,7 +211,7 @@ local function getKeySettingVal()
 }, "Reveal map");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalHeal", "h", ::MSU.Key.State.Tactical, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	local state = ::Tactical.State;
 	local instances = this.Tactical.Entities.getAllInstancesAsArray();
@@ -238,7 +238,7 @@ local function getKeySettingVal()
 }, "Heal players");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalJump", "j", ::MSU.Key.State.Tactical, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	local tile = ::Tactical.State.m.LastTileHovered;
 	if (tile != null && tile.IsEmpty)
@@ -250,7 +250,7 @@ local function getKeySettingVal()
 }, "Jump to tile");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalKill", "k", ::MSU.Key.State.Tactical, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	local state = ::Tactical.State;
 	if (state.m.LastTileHovered == null || state.m.LastTileHovered.IsEmpty)
@@ -267,7 +267,7 @@ local function getKeySettingVal()
 }, "Kill hovered entity.");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalNuke", "o", ::MSU.Key.State.Tactical, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	local state = ::Tactical.State;
 	local factions = this.Tactical.Entities.m.Instances;
@@ -285,14 +285,14 @@ local function getKeySettingVal()
 }, "Kill all enemy entities.");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalSpeed1", "f1", ::MSU.Key.State.Tactical, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(1.0);
 	::logConsole("Debug: Virtual Speed set to x1.0");
 }, "Tactical Speed 1.0");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalSpeed2", "f2", ::MSU.Key.State.Tactical, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(2.0);
 	::logConsole("Debug: Virtual Speed set to x2.0");
@@ -300,7 +300,7 @@ local function getKeySettingVal()
 
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalSpeed3", "f3", ::MSU.Key.State.Tactical, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(3.0);
 	::logConsole("Debug: Virtual Speed set to x3.0");
@@ -308,7 +308,7 @@ local function getKeySettingVal()
 
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalSpeed4", "f4", ::MSU.Key.State.Tactical, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(4.0);
 	::logConsole("Debug: Virtual Speed set to x4.0");
@@ -316,7 +316,7 @@ local function getKeySettingVal()
 
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalSpeed5", "f5", ::MSU.Key.State.Tactical, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(5.0);
 	::logConsole("Debug: Virtual Speed set to x5.0");
@@ -324,7 +324,7 @@ local function getKeySettingVal()
 
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalSpeed6", "f6", ::MSU.Key.State.Tactical, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(6.0);
 	::logConsole("Debug: Virtual Speed set to x6.0");
@@ -332,7 +332,7 @@ local function getKeySettingVal()
 
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalSpeed7", "f7", ::MSU.Key.State.Tactical, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(7.0);
 	::logConsole("Debug: Virtual Speed set to x7.0");
@@ -340,7 +340,7 @@ local function getKeySettingVal()
 
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalSpeed8", "f8", ::MSU.Key.State.Tactical, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(8.0);
 	::logConsole("Debug: Virtual Speed set to x8.0");
@@ -348,7 +348,7 @@ local function getKeySettingVal()
 
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalSpeed9", "f9", ::MSU.Key.State.Tactical, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(9.0);
 	::logConsole("Debug: Virtual Speed set to x9.0");
@@ -356,7 +356,7 @@ local function getKeySettingVal()
 
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalSpeed10", "f10", ::MSU.Key.State.Tactical, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(10.0);
 	::logConsole("Debug: Virtual Speed set to x10.0");
@@ -364,7 +364,7 @@ local function getKeySettingVal()
 
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalSpeed11", "f11", ::MSU.Key.State.Tactical, function(){
-	if (!getKeySettingVal())
+	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(11.0);
 	::logConsole("Debug: Virtual Speed set to x11.0");
