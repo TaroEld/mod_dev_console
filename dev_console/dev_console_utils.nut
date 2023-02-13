@@ -50,12 +50,11 @@
 		local sp = split(unit, "/")
 	    if(sp[sp.len()-1] == _script){
 	    	::logConsole("Next unit to spawn: " + unit )
-	    	local gt = this.getroottable()
 
-	    	gt.DevConsole.m.SpawnUnit.SpawnUnitScript = unit
-    		if (_faction == "player") gt.DevConsole.m.SpawnUnit.SpawnUnitFaction = this.Const.Faction.Player
-    		else if (_faction == "enemy") gt.DevConsole.m.SpawnUnit.SpawnUnitFaction = this.Const.Faction.Enemy
-    		else gt.DevConsole.m.SpawnUnit.SpawnUnitFaction = _faction
+	    	::DevConsole.Screen.m.SpawnUnit.SpawnUnitScript = unit
+    		if (_faction == "player") ::DevConsole.Screen.m.SpawnUnit.SpawnUnitFaction = this.Const.Faction.Player
+    		else if (_faction == "enemy") ::DevConsole.Screen.m.SpawnUnit.SpawnUnitFaction = this.Const.Faction.Enemy
+    		else ::DevConsole.Screen.m.SpawnUnit.SpawnUnitFaction = _faction
 	    	return
 	    }
 	}
