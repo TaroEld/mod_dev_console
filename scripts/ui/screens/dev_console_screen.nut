@@ -114,10 +114,11 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 
 	function onSpawnUnitPressed()
 	{
-		if (this.m.LastTileHovered != null && this.m.LastTileHovered.IsEmpty && this.m.SpawnUnit.SpawnUnitScript != "")
+		local tile = ::Tactical.State.m.LastTileHovered;
+		if (tile != null && tile.IsEmpty && this.m.SpawnUnit.SpawnUnitScript != "")
 		{
 			local script = this.m.SpawnUnit.SpawnUnitScript
-			local entity = this.Tactical.spawnEntity(script);
+			local entity = this.Tactical.spawnEntity(script, tile.Coords.X, tile.Coords.Y);
 			local selectedFaction = this.m.SpawnUnit.SpawnUnitFaction
 			if (selectedFaction != this.Const.Faction.Player && selectedFaction != this.Const.Faction.Enemy) selectedFaction = this.World.FactionManager.getFactionOfType(selectedFaction).getID()
 			entity.setFaction(selectedFaction);
