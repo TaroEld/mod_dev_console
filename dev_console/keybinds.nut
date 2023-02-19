@@ -138,56 +138,38 @@ local function canExecuteBind()
 	::logConsole("Debug: Player attackable: " + ::World.State.m.Player.isAttackable());
 }, "Toggle player being attackable.");
 
+local function setWorldSpeedMult(_speed)
+{
+	if (!canExecuteBind() || this.getMenuStack().hasBacksteps())
+		return false;
+	this.setPause(false);
+	this.World.setSpeedMult(_speed);
+	::logConsole("Debug: Set speed mult to " + _speed);
+	return true;
+}
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed4", "3", ::MSU.Key.State.World, function(){
-	if (!canExecuteBind())
-		return;
-	this.setPause(false);
-	this.World.setSpeedMult(4.0);
-	::logConsole("Debug: Set speed mult to 4.0")
+	return setWorldSpeedMult(4.0);
 }, "World Speed 4x");
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed8", "4", ::MSU.Key.State.World, function(){
-	if (!canExecuteBind())
-		return;
-	this.setPause(false);
-	this.World.setSpeedMult(8.0);
-	::logConsole("Debug: Set speed mult to 8.0")
+	return setWorldSpeedMult(8.0);
 }, "World Speed 8x");
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed16", "5", ::MSU.Key.State.World, function(){
-	if (!canExecuteBind())
-		return;
-	this.setPause(false);
-	this.World.setSpeedMult(16.0);
-	::logConsole("Debug: Set speed mult to 16.0")
+	return setWorldSpeedMult(16.0);
 }, "World Speed 16x");
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed32", "6", ::MSU.Key.State.World, function(){
-	if (!canExecuteBind())
-		return;
-	this.setPause(false);
-	this.World.setSpeedMult(32.0);
-	::logConsole("Debug: Set speed mult to 32.0")
+	return setWorldSpeedMult(32.0);
 }, "World Speed 32x");
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed64", "7", ::MSU.Key.State.World, function(){
-	if (!canExecuteBind())
-		return;
-	this.setPause(false);
-	this.World.setSpeedMult(64.0);
-	::logConsole("Debug: Set speed mult to 64.0")
+	return setWorldSpeedMult(64.0);
 }, "World Speed 64x");
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed128", "8", ::MSU.Key.State.World, function(){
-	if (!canExecuteBind())
-		return;
-	this.setPause(false);
-	this.World.setSpeedMult(128.0);
-	::logConsole("Debug: Set speed mult to 128.0")
+	return setWorldSpeedMult(128.0);
 }, "World Speed 128x");
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed256", "9", ::MSU.Key.State.World, function(){
-	if (!canExecuteBind())
-		return;
-	this.setPause(false);
-	this.World.setSpeedMult(256.0);
-	::logConsole("Debug: Set speed mult to 256.0")
+	return setWorldSpeedMult(256.0);
 }, "World Speed 256x");
+
 
 
 ::DevConsole.Mod.Keybinds.addDivider("DebugBindsTactical");
