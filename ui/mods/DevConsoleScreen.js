@@ -433,18 +433,18 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
         }
 
         // copied from https://stackoverflow.com/questions/6637341/use-tab-to-indent-in-textarea
-        // if (code === KeyConstants.Tabulator) {
-        //     _event.preventDefault();
-        //     var start = this.selectionStart;
-        //     var end = this.selectionEnd;
+        if (code === KeyConstants.Tabulator) {
+            _event.preventDefault();
+            var start = this.selectionStart;
+            var end = this.selectionEnd;
 
-        //     // set textarea value to: text before caret + tab + text after caret
-        //     this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
+            // set textarea value to: text before caret + tab + text after caret
+            this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
 
-        //     // put caret at right position again
-        //     this.selectionStart = this.selectionEnd = start + 4;
-        //     return false;
-        // }
+            // put caret at right position again
+            this.selectionStart = this.selectionEnd = start + 4;
+            return false;
+        }
 
         if (code === KeyConstants.Home)
             code = KeyConstants.ArrowUp
@@ -541,6 +541,7 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
     {
         var self = _event.data;
         var data = self.data('input');
+
         data.inputDenied = false;
         if(_inputUpdatedCallback !== undefined && jQuery.isFunction(_inputUpdatedCallback))
         {
@@ -548,6 +549,10 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
         }
 
         self.data('input', data);
+
+        var text = $(this).val();
+        text.replace(/\t/g, "    ");
+        $(this).val(text);
     });
 
     result.on("input", function () {
