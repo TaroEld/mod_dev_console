@@ -43,5 +43,9 @@ I've included a number of useful debug keybinds. They've been lifted from the un
 Debug Keybinds are disabled by default. They can be enabled by toggling the `Enable debug keybinds` setting.\
 To get a list of available keybinds, check the Mod Settings.
 
+## Known issues:
+There are some issues with the `compilescript()` squirrel function. It will complain about missing `;` or `lf` despite the syntax being correct.\
+This seems to be related to `if | if / else  | if/ else if`. Try semicolons after the closing if curly braces, and either don't use else if, or don't put any other statement in the same scope after it.\
+If everything else fails, you can try to use the this.include() function, which allows you to add and run a .nut file. Place it in your data folder, and run 'this.include("my_file"), without .nut. A file can only be run once per game start this way, so you'll need to rename it or restart the game if you need to do it more than once.
 
 
