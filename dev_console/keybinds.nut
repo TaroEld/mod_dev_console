@@ -13,7 +13,7 @@
 ::DevConsole.Mod.Keybinds.addSQKeybind("onSpawnUnitDevConsoleScreen", "ctrl+z", ::MSU.Key.State.Tactical, ::DevConsole.Screen.onSpawnUnitPressed.bindenv( ::DevConsole.Screen)
 	"Spawn Unit", null, "Spawns the unit designated with ::setSpawn()");
 
-::DevConsole.Mod.Keybinds.addSQKeybind("reloadCSS", "ctrl+c", ::MSU.Key.State.All,  ::reloadCSS, "Reload CSS", null, "Reloads all CSS files.");
+::DevConsole.Mod.Keybinds.addSQKeybind("reloadCSS", "ctrl+shift+c", ::MSU.Key.State.All,  ::reloadCSS, "Reload CSS", null, "Reloads all CSS files.");
 ::DevConsole.Mod.Keybinds.addSQKeybind("reloadJS", "ctrl+shift+j", ::MSU.Key.State.All,  ::reloadJS, "Reload JS", null, "Reloads all JS files.");
 
 local function canExecuteBind()
