@@ -11,9 +11,11 @@
 	::include("dev_console/dev_console_js_connection");
 	::include("dev_console/dev_console_utils");
 	::mods_registerJS("DevConsoleUtils.js");
+	::mods_registerJS("DevConsoleElementInspector.js");
 	::mods_registerJS("DevConsoleJSConnection.js");
 	::mods_registerJS("DevConsoleScreen.js");
 	::mods_registerCSS("DevConsoleScreen.css");
+
 	::DevConsole.Mod.Debug.disable(); 
 	::DevConsole.Screen <- this.new("scripts/ui/screens/dev_console_screen");
 	::DevConsole.JSConnection <- this.new("dev_console/dev_console_js_connection");
