@@ -1,3 +1,18 @@
+.dom-element-inspector
+{
+	border: 1px solid red;
+	background-color: rgba(0, 0, 0, 0.7);
+	z-index: 99999;
+	color: white;
+	font-size: 20px;
+	position: absolute;
+	top:0px;
+	left:0;
+}
+.dom-element-inspector-selected
+{
+	outline: 2px solid red;
+}
 .dev-console-main-container
 {
 	top: 0;

@@ -24,7 +24,6 @@ this.dev_console_js_connection <- ::inherit("scripts/mods/msu/js_connection", {
 		this.m.LastParsedData <- _data;
 	}
 
-
 	function reloadCSS(_path = null)
 	{
 		this.m.JSHandle.asyncCall("reloadCSS", _path);
@@ -33,5 +32,17 @@ this.dev_console_js_connection <- ::inherit("scripts/mods/msu/js_connection", {
 	function reloadJS(_path = null)
 	{
 		this.m.JSHandle.asyncCall("reloadJS", _path);
+	}
+
+	function toggleElementInspector()
+	{
+		this.m.JSHandle.asyncCall("toggleElementInspector", null);
+		return true;
+	}
+
+	function toggleElementInspectorLevel(_int)
+	{
+		this.m.JSHandle.asyncCall("toggleElementInspectorLevel", _int);
+		return true;
 	}
 })

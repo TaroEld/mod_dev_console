@@ -16,6 +16,19 @@
 ::DevConsole.Mod.Keybinds.addSQKeybind("reloadCSS", "ctrl+shift+c", ::MSU.Key.State.All,  ::reloadCSS, "Reload CSS", null, "Reloads all CSS files.");
 ::DevConsole.Mod.Keybinds.addSQKeybind("reloadJS", "ctrl+shift+j", ::MSU.Key.State.All,  ::reloadJS, "Reload JS", null, "Reloads all JS files.");
 
+::DevConsole.Mod.Keybinds.addDivider("inspectorDivider");
+::DevConsole.Mod.Keybinds.addTitle("inspector", "Element Inspector");
+::DevConsole.Mod.Keybinds.addSQKeybind("toggleElementInspector", "ctrl+i", ::MSU.Key.State.All,
+	::DevConsole.JSConnection.toggleElementInspector.bindenv( ::DevConsole.JSConnection), "Toggle State", null, "Toggles the state of the element inspector.");
+::DevConsole.Mod.Keybinds.addSQKeybind("toggleElementInspectorLevelUp", "ctrl+up", ::MSU.Key.State.All,
+	function(){
+		return ::DevConsole.JSConnection.toggleElementInspectorLevel(1);
+	} , "Increase Level", null, "Increases the DOM node level of the element inspector. It will go up one parent node of the hovered element for each level.");
+::DevConsole.Mod.Keybinds.addSQKeybind("toggleElementInspectorLevelDown", "ctrl+down", ::MSU.Key.State.All,
+	function(){
+		return ::DevConsole.JSConnection.toggleElementInspectorLevel(-1);
+	}, "Decrease Level", null, "Decreases the DOM node level of the element inspector.");
+
 local function canExecuteBind()
 {
 	return ::DevConsole.Mod.ModSettings.getSetting("EnableDebugKeybinds").getValue() && !::DevConsole.Screen.isVisible();
