@@ -12,19 +12,30 @@ function ElementInspector()
 	this.State = 0;
 	this.NodeLevel = 0;
 	this.LastElement = null;
+	this.CursorPosX = 0;
+	this.CursorPosY = 0;
 }
 ElementInspector.prototype.toggleState = function()
 {
 	this.State++;
 	if (this.State > this.States.Full)
 		this.State = this.States.None
-	return this.inspectElement(this.LastElement);
+	return this.inspectElement(this.getElementFromCursor());
 };
 ElementInspector.prototype.changeNodeLevel = function(_int)
 {
 	this.NodeLevel = Math.max(0, this.NodeLevel + _int);
-	return this.inspectElement(this.LastElement);
+	return this.inspectElement(this.getElementFromCursor());
 };
+ElementInspector.prototype.setCursorPos = function(_ev)
+{
+	this.CursorPosX = _ev.clientX;
+	this.CursorPosY = _ev.clientY;
+};
+ElementInspector.prototype.getElementFromCursor = function()
+{
+	return document.elementFromPoint(this.CursorPosX, this.CursorPosY);
+}
 ElementInspector.prototype.inspectElement = function(_target)
 {
 	if (this.LastElement !== null)
@@ -39,7 +50,7 @@ ElementInspector.prototype.inspectElement = function(_target)
 	this.Tooltip.show();
 	this.LastElement = elem;
 
-	var text = "<div>Node Level= " + this.NodeLevel + "</div>";
+	var text = "<div>Node Level: " + this.NodeLevel + "</div>";
 	text += "<div>Inspector State: " + this.State + "</div>";
 	text += "<div>Type: " + elem.tagName + "</div>";
 	text += "<div>Classes: " + elem.classList + "</div>";
@@ -114,6 +125,10 @@ ElementInspector.prototype.getUniqueUserStyling = function(element){
 }
 
 var ElementInspector = new ElementInspector();
-$(document.body).mouseover(function (ev) {
+$(document.body).on("mousemove.devconsole", function (ev) {
+	ElementInspector.setCursorPos(ev);
+})
+
+$(document.body).on("mouseover.devconsole", function (ev) {
 	return ElementInspector.inspectElement(ev.target);
 })
