@@ -19,6 +19,27 @@ Furthermore, I have added the global functions `::logConsole` (SQ) and `logConso
 Finally, print statements by the game engine(s) (`::logInfo`, `::logWarning`, `::logError`, `console.error`) are also printed to the console.\
 In JS, objects can generally be printed rather easily, either directly or by using `JSON.stringify`. For SQ, you can use the MSU function `::MSU.Log.printData` to print tables and such.
 
+## Debug Keybinds
+I've included a number of useful debug keybinds. They've been lifted from the unused ingame debug module, respectively the Debug Mod by VilainJoueur.\
+Debug Keybinds are disabled by default. They can be enabled by toggling the `Enable debug keybinds` setting.\
+To get a list of available keybinds, check the Mod Settings.
+
+## Element Inspector
+I've added a HTML element inpector based on a suggestion/idea by KFox#2537.  
+This allows you to look at elements below the cursor to see details such as the type, classes, and styling.  
+#### States
+At this time it has 4 states, which can be toggled via ctrl+i (modsetting keybind):  
+- None: Disabled  
+- Simple: Type, Class  
+- Border: Simple plus renders a border around the current element  
+- Full: Adds CSS styling  
+The default state can be set via modsetting.  
+#### Node Level
+Often, it's useful to be able to look at an element that is below the current one. This is the `Node Level` value.  
+The Node Level can be changed via `ctrl` + `up` | `down`. (modsetting keybind).  
+ 
+
+
 ## Utility Functions
 
 #### `::reloadCSS(_path = null)` and `::reloadJS(_path = null)`
@@ -37,11 +58,6 @@ First checks for first name only, then for name plus title. If multiple bros are
 
 #### `::getTown(_townName)`
 Returns a worldmap town with `_townName`.
-
-## Debug Keybinds
-I've included a number of useful debug keybinds. They've been lifted from the unused ingame debug module, respectively the Debug Mod by VilainJoueur.\
-Debug Keybinds are disabled by default. They can be enabled by toggling the `Enable debug keybinds` setting.\
-To get a list of available keybinds, check the Mod Settings.
 
 ## Known issues:
 There are some issues with the `compilescript()` squirrel function. It will complain about missing `;` or `lf` despite the syntax being correct.\
