@@ -15,6 +15,10 @@ function ElementInspector()
 	this.CursorPosX = 0;
 	this.CursorPosY = 0;
 }
+ElementInspector.prototype.setState = function(_val)
+{
+	this.State = _val;
+}
 ElementInspector.prototype.toggleState = function()
 {
 	this.State++;

@@ -97,14 +97,23 @@ DevConsoleJSConnection.prototype.JSONParseFromString = function(_string)
     }
 }
 
-DevConsoleJSConnection.prototype.toggleElementInspector = function()
+DevConsoleJSConnection.prototype.toggleElementInspectorState = function()
 {
     ElementInspector.toggleState();
 }
 
-DevConsoleJSConnection.prototype.toggleElementInspectorLevel = function(_int)
+DevConsoleJSConnection.prototype.setElementInspectorState = function(_val)
+{
+    ElementInspector.setState(_val);
+}
+
+DevConsoleJSConnection.prototype.changeElementInspectorLevel = function(_int)
 {
   	ElementInspector.changeNodeLevel(_int);
+}
+
+DevConsoleJSConnection.prototype.finalize = function(){
+	ElementInspector.State = MSU.getSettingValue(DevConsole.mModID, "ElementInspectorDefaultLevel");
 }
 
 

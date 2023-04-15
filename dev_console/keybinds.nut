@@ -18,15 +18,15 @@
 
 ::DevConsole.Mod.Keybinds.addDivider("inspectorDivider");
 ::DevConsole.Mod.Keybinds.addTitle("inspector", "Element Inspector");
-::DevConsole.Mod.Keybinds.addSQKeybind("toggleElementInspector", "ctrl+i", ::MSU.Key.State.All,
-	::DevConsole.JSConnection.toggleElementInspector.bindenv( ::DevConsole.JSConnection), "Toggle State", null, "Toggles the state of the element inspector.");
-::DevConsole.Mod.Keybinds.addSQKeybind("toggleElementInspectorLevelUp", "ctrl+up", ::MSU.Key.State.All,
+::DevConsole.Mod.Keybinds.addSQKeybind("toggleElementInspectorState", "ctrl+i", ::MSU.Key.State.All,
+	::DevConsole.JSConnection.toggleElementInspectorState.bindenv( ::DevConsole.JSConnection), "Toggle State", null, "Toggles the state of the element inspector.");
+::DevConsole.Mod.Keybinds.addSQKeybind("increaseElementInspectorLevel", "ctrl+up", ::MSU.Key.State.All,
 	function(){
-		return ::DevConsole.JSConnection.toggleElementInspectorLevel(1);
+		return ::DevConsole.JSConnection.changeElementInspectorLevel(1);
 	} , "Increase Level", null, "Increases the DOM node level of the element inspector. It will go up one parent node of the hovered element for each level.");
-::DevConsole.Mod.Keybinds.addSQKeybind("toggleElementInspectorLevelDown", "ctrl+down", ::MSU.Key.State.All,
+::DevConsole.Mod.Keybinds.addSQKeybind("decreaseElementInspectorLevel", "ctrl+down", ::MSU.Key.State.All,
 	function(){
-		return ::DevConsole.JSConnection.toggleElementInspectorLevel(-1);
+		return ::DevConsole.JSConnection.changeElementInspectorLevel(-1);
 	}, "Decrease Level", null, "Decreases the DOM node level of the element inspector.");
 
 local function canExecuteBind()

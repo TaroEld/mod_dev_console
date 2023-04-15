@@ -21,6 +21,7 @@
 	::DevConsole.JSConnection <- this.new("dev_console/dev_console_js_connection");
 	::MSU.UI.registerConnection(::DevConsole.JSConnection);
 	::MSU.UI.registerConnection(::DevConsole.Screen);
+	::MSU.UI.addOnConnectCallback(::DevConsole.JSConnection.finalize.bindenv(::DevConsole.JSConnection));
 
 	::include("dev_console/keybinds");
 
@@ -32,6 +33,11 @@
 	generalPage.addColorPickerSetting("message", "36,140,182, 1.0", "Font Color logInfo");
 	generalPage.addColorPickerSetting("warning", "241,90,34,1.0", "Font Color logWarning");
 	generalPage.addColorPickerSetting("error", "255,0,0,1.0", "Font Color logError");
+	generalPage.addRangeSetting("ElementInspectorDefaultLevel", 0, 0, 4, 1, "Element Inspector Level", "The default level of the element inspector.")
+		.addAfterChangeCallback(function(_){
+			::DevConsole.JSConnection.setElementInspectorState(this.getValue());
+	})
+
 
 	local logInfo = ::logInfo
 	::logInfo = function(_msg, _dev = true)
