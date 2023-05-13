@@ -3,6 +3,16 @@ function ElementInspector()
 {
 	this.Tooltip = $('<div class="dom-element-inspector"/>');
 	this.Tooltip.appendTo($('body'));
+	this.Tooltip.drag(function( ev, dd ){
+	    var clamp = function(num, min, max){
+	        return Math.min(Math.max(num, min), max);
+	    }
+
+	      $( this ).css({
+	         top: clamp(dd.offsetY, 0, $(document).height()),
+	         left: clamp(dd.offsetX, 0, $(document).width())
+	      });
+	});
 	this.States = {
 		None : 0,
 		Simple : 1,
