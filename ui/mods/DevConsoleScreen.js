@@ -547,12 +547,9 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
         {
             _inputUpdatedCallback($(this), self.getInputTextLength());
         }
-
+        $(this).val($(this).val().replace(/\t/g, "    "));
         self.data('input', data);
 
-        var text = $(this).val();
-        text.replace(/\t/g, "    ");
-        $(this).val(text);
     });
 
     result.on("input", function () {
