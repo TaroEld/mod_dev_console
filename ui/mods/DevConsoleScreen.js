@@ -66,7 +66,6 @@ DevConsoleScreen.prototype.createLogContent = function ()
 
     // create: container
     var inputLayout = $('<div class="devconsole-input-layout"/>').appendTo(this.mLogModule);
-    var label = $('<div class="label text-font-normal font-color-label font-bottom-shadow">Command</div>').appendTo(inputLayout);
 
     var textAreaLayout = $('<div class="l-input"/>').appendTo(inputLayout);
     this.mInputContainer = textAreaLayout.mod_createInput('', 0, 10000, 1, null);

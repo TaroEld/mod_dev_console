@@ -142,8 +142,8 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			cmd = split(cmd, ctrl).reduce(@(a,b) a+b)
 		}
 
-		::logConsole("Command: " + cmd)
-		::logConsole("Start Command-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
+		::logInfo("Command: " + cmd)
+		::logInfo("Start Command-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
 
 		local compiledScript, output;
 		try {
@@ -164,27 +164,11 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			{
 				::logError("Failed to run command, Error: " + exception)
 			}
-			::logConsole("Output: " + ::MSU.Log.getLocalString(output, 10, 2, true, true));
+			::logInfo("Output: " + ::MSU.Log.getLocalString(output, 10, 2, true, true));
 		}
 
-		::logConsole("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
+		::logInfo("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
 	}
-
-	// function logEx( _text, _type = "message")
-	// {
-	// 	// try {
-	// 		if (this.m.JSHandle != null)
-	// 		{
-	// 			this.m.JSHandle.asyncCall("log", {
-	// 				Text = _text,
-	// 				Type = _type
-	// 			});
-	// 		}
-	// 	// }
-	// 	// catch (exception){
-	// 	// 	::logError("Dev console would have crashed for some reason")
-	// 	// }
-	// }
 
 	function log( _text, _type = "message")
 	{
@@ -193,7 +177,6 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		if (l >= this.m.BufferMax * 2) {
 			this.m.Buffer = this.m.Buffer.slice(l - this.m.BufferMax, l);
 		}
-		// this.logEx("\n" + _text, _type);
 	}
 
 	function pullBuffer() {

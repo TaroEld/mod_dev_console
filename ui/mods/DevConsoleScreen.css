@@ -26,13 +26,16 @@
 {
 	height: 100%;
 	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .devconsole-input-layout,
 .devconsole-output-layout
 {
 	max-height: 45%;
-	width: 90%;
+	width: 95%;
 }
 
 .devconsole-input-layout .console-textarea
@@ -40,7 +43,7 @@
 	width: 100%;
 	background-image: none !important;
 	background-color: rgba(0, 0, 0, 0.5);
-	border: 1px solid gold !important;
+	border: 1px solid rgba(0, 0, 0, 0.8) !important;
 	background-size: 100% 100% !important;
 	background-repeat: no-repeat;
 	overflow: scroll;
@@ -60,7 +63,7 @@
 {
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    border: 1px solid gold !important;
+    border: 1px solid rgba(0, 0, 0, 0.8) !important;
 }
 .devconsole-output-layout .log-entry
 {
