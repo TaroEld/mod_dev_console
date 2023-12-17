@@ -158,7 +158,37 @@ DevConsoleScreen.prototype.show = function (_moveLeftRight, _considerParent)
 	this.mContainer.removeClass('display-none').addClass('display-block');
 	this.notifyBackendOnShown();
 	this.onShow();
+
+    // new
+    this.mPuller = setInterval(this.pullBuffer.bind(this), 200);
 };
+
+DevConsoleScreen.prototype.pullBuffer = function ()
+{
+    if (!this.mIsVisible && this.mPuller) {
+        clearInterval(this.mPuller);
+        this.mPuller = null;
+        return
+    }
+    SQ.call(this.mSQHandle, "pullBuffer", null, this.receiveBuffer.bind(this));
+};
+
+DevConsoleScreen.prototype.receiveBuffer = function (buffer) {
+    var n = this.mMaxVisibleEntries;
+    this.mMessageQueue = buffer.length >= n ? buffer : this.mMessageQueue.concat(buffer);
+    if (this.mMessageQueue.length > n) {
+        this.mMessageQueue.splice(0, this.mMessageQueue.length - n);
+    }
+    if (this.mMessageQueue.length > 0) this.scheduleProcessQueue();
+}
+
+DevConsoleScreen.prototype.scheduleProcessQueue = function () {
+    if (this.mTimerHandle !== null)
+    {
+        this.mTimerHandle = clearTimeout(this.mTimerHandle);
+    }
+    this.mTimerHandle = setTimeout(this.processQueue.bind(this), 10);
+}
 
 DevConsoleScreen.prototype.enlarge = function ()
 {
@@ -214,22 +244,15 @@ DevConsoleScreen.prototype.updateColorSettings = function ()
 
 DevConsoleScreen.prototype.log = function(_message)
 {
-	var self = this;
 	this.mMessageQueue.push(_message);
-	if (this.mTimerHandle !== null)
-	{
-		this.mTimerHandle = clearTimeout(this.mTimerHandle);
-	}
-	this.mTimerHandle = setTimeout(function() {
-		self.processQueue();
-	}, 10);
+    this.scheduleProcessQueue();
 }
 
 DevConsoleScreen.prototype.processQueue = function()
 {
 	var self = this;
 	this.mMessageQueue.forEach(function(_message){
-		if (self.mOutputScrollContainer == null)
+		if (self.mOutputScrollContainer == null || _message.Text === null || typeof(_message.Text) != 'string')
 			return
 		_message.Text = String(_message.Text);
 	    var entry = self.createEventLogEntryDIV(_message.Text, _message.Type);
@@ -376,7 +399,7 @@ DevConsoleScreen.prototype.notifyBackendRunCommand = function(_command)
 {
     if (this.mSQHandle !== null)
     {
-        SQ.call(this.mSQHandle, 'addToQueue', _command);
+        SQ.call(this.mSQHandle, 'onDevConsoleCommand', _command);
     }
 }
 

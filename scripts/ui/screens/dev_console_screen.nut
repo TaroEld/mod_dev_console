@@ -11,9 +11,9 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			Small = 1,
 			Large = 2
 		}
-		CurrentState = 0,
-		MessageQueue = [],
-		TimeToExecute = 0,
+		CurrentState = 0
+		BufferMax = 1000
+		Buffer = []
 	},
 
 	function show()
@@ -162,51 +162,44 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			}
 			catch (exception)
 			{
-				::logConsole("Failed to run command, Error: " + exception, "error")
+				::logError("Failed to run command, Error: " + exception)
 			}
 			::logConsole("Output: " + ::MSU.Log.getLocalString(output, 10, 2, true, true));
 		}
 
-		::logConsole("End Command-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
+		::logConsole("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
 	}
 
-	function addToQueue(_message)
-	{
-		this.m.MessageQueue.push(_message);
-		this.m.TimeToExecute = this.Time.getExactTime() + (10 *this.TimeUnit.Real);
-		this.Time.scheduleEvent(this.TimeUnit.Real, 10, this.processQueue.bindenv(this), null)
-	}
-
-
-	function processQueue(_)
-	{
-		if (this.m.TimeToExecute > this.Time.getExactTime())
-			return;
-		foreach (_message in this.m.MessageQueue){
-			this.onDevConsoleCommand(_message)
-		}
-		this.m.MessageQueue = [];
-	}
-
-	function logEx( _text, _type = "message")
-	{
-		try {
-			if (this.m.JSHandle != null)
-			{
-				this.m.JSHandle.asyncCall("log", {
-					Text = _text,
-					Type = _type
-				});
-			}
-		}
-		catch (exception){
-			::logError("Dev console would have crashed for some reason")
-		}
-	}
+	// function logEx( _text, _type = "message")
+	// {
+	// 	// try {
+	// 		if (this.m.JSHandle != null)
+	// 		{
+	// 			this.m.JSHandle.asyncCall("log", {
+	// 				Text = _text,
+	// 				Type = _type
+	// 			});
+	// 		}
+	// 	// }
+	// 	// catch (exception){
+	// 	// 	::logError("Dev console would have crashed for some reason")
+	// 	// }
+	// }
 
 	function log( _text, _type = "message")
 	{
-		this.logEx("\n" + _text, _type);
+		this.m.Buffer.push({Text = _text, Type = _type})
+		local l = this.m.Buffer.len();
+		if (l >= this.m.BufferMax * 2) {
+			this.m.Buffer = this.m.Buffer.slice(l - this.m.BufferMax, l);
+		}
+		// this.logEx("\n" + _text, _type);
+	}
+
+	function pullBuffer() {
+		local buffer = this.m.Buffer;
+		this.m.Buffer = [];
+		return buffer;
 	}
 
 	function addPreviousCommand(_data)
