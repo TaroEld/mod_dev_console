@@ -268,6 +268,7 @@ DevConsoleScreen.prototype.clearConsole = function()
     this.mInputContainer.val('');
     this.mOutputScrollContainer.empty();
     this.mInputContainer.focus();
+    this.mMessageQueue = [];
     this.adjustDivHeights();
 }
 
@@ -375,7 +376,7 @@ DevConsoleScreen.prototype.notifyBackendRunCommand = function(_command)
 {
     if (this.mSQHandle !== null)
     {
-        SQ.call(this.mSQHandle, 'onDevConsoleCommand', _command);
+        SQ.call(this.mSQHandle, 'addToQueue', _command);
     }
 }
 

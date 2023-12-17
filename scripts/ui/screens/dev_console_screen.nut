@@ -11,7 +11,9 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			Small = 1,
 			Large = 2
 		}
-		CurrentState = 0
+		CurrentState = 0,
+		MessageQueue = [],
+		TimeToExecute = 0,
 	},
 
 	function show()
@@ -160,27 +162,45 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			}
 			catch (exception)
 			{
-				::logError("Failed to run command, Error: " + exception)
+				::logConsole("Failed to run command, Error: " + exception, "error")
 			}
-			::logInfo("Output: " + ::MSU.Log.getLocalString(output, 10, 2, true, true));
+			::logConsole("Output: " + ::MSU.Log.getLocalString(output, 10, 2, true, true));
 		}
 
-		::logInfo("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
+		::logConsole("End Command-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
+	}
+
+	function addToQueue(_message)
+	{
+		this.m.MessageQueue.push(_message);
+		this.m.TimeToExecute = this.Time.getExactTime() + (10 *this.TimeUnit.Real);
+		this.Time.scheduleEvent(this.TimeUnit.Real, 10, this.processQueue.bindenv(this), null)
+	}
+
+
+	function processQueue(_)
+	{
+		if (this.m.TimeToExecute > this.Time.getExactTime())
+			return;
+		foreach (_message in this.m.MessageQueue){
+			this.onDevConsoleCommand(_message)
+		}
+		this.m.MessageQueue = [];
 	}
 
 	function logEx( _text, _type = "message")
 	{
-		if (this.m.JSHandle != null)
-		{
-			try {
+		try {
+			if (this.m.JSHandle != null)
+			{
 				this.m.JSHandle.asyncCall("log", {
 					Text = _text,
 					Type = _type
 				});
 			}
-			catch (exception){
-				::logError("Dev console would have crashed for some reason")
-			}
+		}
+		catch (exception){
+			::logError("Dev console would have crashed for some reason")
 		}
 	}
 
