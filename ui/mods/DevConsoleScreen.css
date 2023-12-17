@@ -15,7 +15,7 @@
 {
     height: 100%;
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.5);
     z-index : 7000;
     display: flex;
     flex-direction: column;
@@ -37,8 +37,9 @@
 
 .devconsole-input-layout .console-textarea
 {
+	width: 100%;
 	background-image: none !important;
-	background-color: black !important;
+	background-color: rgba(0, 0, 0, 0.5);
 	border: 1px solid gold !important;
 	background-size: 100% 100% !important;
 	background-repeat: no-repeat;
@@ -66,10 +67,10 @@
     margin-left: 0.7rem;
     margin-right: 0.2rem;
     overflow-wrap: break-word;
-    -moz-user-select: -moz-text;
-	-webkit-user-select: text;
-	user-select: text;
-    pointer-events: auto;
+    -moz-user-select: -moz-text !important;
+	-webkit-user-select: text !important;
+	user-select: text !important;
+    pointer-events: auto !important;
 }
 
 

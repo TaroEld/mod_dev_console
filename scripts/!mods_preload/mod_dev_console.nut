@@ -29,7 +29,7 @@
 	local generalPage = ::DevConsole.Mod.ModSettings.addPage("General");
 	generalPage.addBooleanSetting("EnableDebugKeybinds", false, "Enable debug keybinds", "Enables debug keybinds.");
 	generalPage.addBooleanSetting("PrintForParser", false, "Print for Parser", "Prints all lines to the log to be parsed.");
-	generalPage.addColorPickerSetting("BackgroundColor", "0,0,0,1.0", "Background Color");
+	generalPage.addColorPickerSetting("BackgroundColor", "0,0,0,0.5", "Background Color");
 	generalPage.addColorPickerSetting("message", "36,140,182, 1.0", "Font Color logInfo");
 	generalPage.addColorPickerSetting("warning", "241,90,34,1.0", "Font Color logWarning");
 	generalPage.addColorPickerSetting("error", "255,0,0,1.0", "Font Color logError");
