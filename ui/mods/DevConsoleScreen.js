@@ -229,8 +229,9 @@ DevConsoleScreen.prototype.processQueue = function()
 {
 	var self = this;
 	this.mMessageQueue.forEach(function(_message){
-		if (self.mOutputScrollContainer == null || _message.Text === null || typeof(_message.Text) != 'string')
+		if (self.mOutputScrollContainer == null)
 			return
+		_message.Text = String(_message.Text);
 	    var entry = self.createEventLogEntryDIV(_message.Text, _message.Type);
 	    if (self.mOutputScrollContainer.children().length > self.mMaxVisibleEntries)
 	    {
@@ -258,7 +259,7 @@ DevConsoleScreen.prototype.createEventLogEntryDIV = function (_text, _type)
     // });
 
     // entry.html(parsedText.html);
-    entry.html(_text);
+    entry.text(_text);
     return entry;
 };
 
@@ -324,8 +325,8 @@ DevConsoleScreen.prototype.runCommandInJs = function (command)
 	command = command.replace(//g, '');
 
 
-	logConsole("Command: " + command);
-	logConsole("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
+	logConsole("Command: " + String(command));
+	logConsole("Start Command -------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
 	try{
 	    var ret = Function(command)();
 	    if (ret !== undefined && ret !== null)
@@ -336,7 +337,7 @@ DevConsoleScreen.prototype.runCommandInJs = function (command)
 	catch(err){
 		logConsole("Error in command:\n" + err)
 	}
-   logConsole("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
+   logConsole("End Command ----------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
 };
 
 DevConsoleScreen.prototype.adjustDivHeights = function ()
