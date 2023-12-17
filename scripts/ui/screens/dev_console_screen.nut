@@ -204,36 +204,19 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	{
 		if(this.m.PreviousCommands.len() == 0)
 			return
-		local activeState = ::MSU.Utils.getActiveState();
-		if (activeState.ClassName == "main_menu_state")
-			return;
-		if (activeState.ClassName == "tactical_state" && this.Tactical.State.isScenarioMode())
-			return
-		foreach (idx, command in this.m.PreviousCommands)
-		{
-			this.World.Statistics.getFlags().set("DevCommand" + idx, command[0])
-			this.World.Statistics.getFlags().set("DevCommandEnv" + idx, command[1])
-			if (idx == 10) return
-		}
+		::DevConsole.Mod.PersistentData.createFile("PreviousCommands", this.m.PreviousCommands);
 	}
 
 	function setPreviousCommands()
 	{
-		local activeState = ::MSU.Utils.getActiveState();
-		if (activeState.ClassName == "main_menu_state")
-			return;
-		if (activeState.ClassName == "tactical_state" && this.Tactical.State.isScenarioMode())
-			return
 		this.m.PreviousCommands.clear();
-		for (local i = 10; i != -1; i--)
+		if (!::DevConsole.Mod.PersistentData.hasFile("PreviousCommands"))
+			return;
+		local commands = ::DevConsole.Mod.PersistentData.readFile("PreviousCommands");
+		for (local i = commands.len() - 1; i != -1; i--)
 		{
-			local command = this.World.Statistics.getFlags().get("DevCommand" + i);
-			if (command)
-			{
-				this.addPreviousCommand([command, this.World.Statistics.getFlags().get("DevCommandEnv" + i)]);
-			}
+			this.addPreviousCommand(commands[i]);
 		}
-
 		if (this.m.JSHandle != null)
 		{
 			this.m.JSHandle.asyncCall("setPreviousCommands", this.m.PreviousCommands);
