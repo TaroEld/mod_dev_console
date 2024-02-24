@@ -3,6 +3,11 @@ function ElementInspector()
 {
 	this.Tooltip = $('<div class="dom-element-inspector"/>');
 	this.Tooltip.appendTo($('body'));
+	this.TooltipText = $('<div class="dom-element-inspector-text"/>')
+		.appendTo(this.Tooltip);
+	this.Input = $('<input type="text" class="dom-element-inspector-input"/>')
+		.hide()
+		.appendTo(this.Tooltip);
 	this.Tooltip.drag(function( ev, dd ){
 	    var clamp = function(num, min, max){
 	        return Math.min(Math.max(num, min), max);
@@ -31,9 +36,28 @@ ElementInspector.prototype.setState = function(_val)
 }
 ElementInspector.prototype.toggleState = function()
 {
+	var self = this;
 	this.State++;
 	if (this.State > this.States.Full)
 		this.State = this.States.None
+	if (this.State == this.States.Full)
+	{
+		this.Input.show();
+		this.Input.prop('disabled', false);
+		this.Input.focus();
+		this.Input.keypress(function (e) {
+			e.stopPropagation();
+		    if (e.which == 13) {
+		       self.setClass(self.Input.val())
+		    }
+		});
+	}
+	else
+	{
+		this.Input.hide();
+		this.Input.off("keypress")
+		this.Input.prop('disabled', true);
+	}
 	return this.inspectElement(this.getElementFromCursor());
 };
 ElementInspector.prototype.changeNodeLevel = function(_int)
@@ -72,7 +96,7 @@ ElementInspector.prototype.inspectElement = function(_target)
 		$(elem).addClass("dom-element-inspector-selected");
 	if (this.State > this.States.Border)
 		text += "<div> Styles: " + JSON.stringify(this.getUniqueUserStyling(elem)) + " </div>";
-	this.Tooltip.html(text)
+	this.TooltipText.html(text)
 };
 ElementInspector.prototype.getParentByLevel = function(element, level) {
 	var parent = element;
@@ -137,6 +161,13 @@ ElementInspector.prototype.getUniqueUserStyling = function(element){
 
     return userStyling;
 }
+
+ElementInspector.prototype.setClass = function(_text) {
+	var cssClass = _text.substring(0, _text.indexOf(' '))
+	var cssValue = _text.substring(_text.indexOf(' ') + 1)
+	$(this.LastElement).css(cssClass, cssValue);
+	return this.inspectElement(this.LastElement);
+};
 
 var ElementInspector = new ElementInspector();
 $(document.body).on("mousemove.devconsole", function (ev) {

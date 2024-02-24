@@ -154,10 +154,23 @@
 	top:0px;
 	left:0;
 }
-.dom-element-inspector > *
+.dom-element-inspector-text
 {
+	color: white;
+	font-size: 20px;
 	pointer-events:none;
 }
+.dom-element-inspector-input{
+	outline:1px solid red;
+	color: white;
+	font-size: 20px;
+	background-color: inherit;
+	outline: 1px solid white;
+	webkit-user-select: text;
+	user-select: text;
+	width: 100%;
+}
+
 .dom-element-inspector-selected
 {
 	outline: 2px solid red;
