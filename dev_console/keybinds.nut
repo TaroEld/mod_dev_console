@@ -20,6 +20,8 @@
 ::DevConsole.Mod.Keybinds.addTitle("inspector", "Element Inspector");
 ::DevConsole.Mod.Keybinds.addSQKeybind("toggleElementInspectorState", "ctrl+i", ::MSU.Key.State.All,
 	::DevConsole.JSConnection.toggleElementInspectorState.bindenv( ::DevConsole.JSConnection), "Toggle State", null, "Toggles the state of the element inspector.");
+::DevConsole.Mod.Keybinds.addSQKeybind("lockElementInspector", "ctrl+l", ::MSU.Key.State.All,
+	::DevConsole.JSConnection.lockElementInspector.bindenv( ::DevConsole.JSConnection), "Lock Element", null, "Lock the currently selected element.");
 ::DevConsole.Mod.Keybinds.addSQKeybind("increaseElementInspectorLevel", "ctrl+up", ::MSU.Key.State.All,
 	function(){
 		return ::DevConsole.JSConnection.changeElementInspectorLevel(1);

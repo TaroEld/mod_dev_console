@@ -27,6 +27,7 @@ function ElementInspector()
 	this.State = 0;
 	this.NodeLevel = 0;
 	this.LastElement = null;
+	this.Locked = false;
 	this.CursorPosX = 0;
 	this.CursorPosY = 0;
 }
@@ -39,7 +40,10 @@ ElementInspector.prototype.toggleState = function()
 	var self = this;
 	this.State++;
 	if (this.State > this.States.Full)
+	{
 		this.State = this.States.None
+		this.Locked = false;
+	}
 	if (this.State == this.States.Full)
 	{
 		this.Input.show();
@@ -60,6 +64,10 @@ ElementInspector.prototype.toggleState = function()
 	}
 	return this.inspectElement(this.getElementFromCursor());
 };
+ElementInspector.prototype.lockElement = function()
+{
+	this.Locked = !this.Locked;
+}
 ElementInspector.prototype.changeNodeLevel = function(_int)
 {
 	this.NodeLevel = Math.max(0, this.NodeLevel + _int);
@@ -76,6 +84,8 @@ ElementInspector.prototype.getElementFromCursor = function()
 }
 ElementInspector.prototype.inspectElement = function(_target)
 {
+	if (this.Locked)
+		return;
 	if (this.LastElement !== null)
 		$(this.LastElement).removeClass("dom-element-inspector-selected")
 	this.LastElement = null;

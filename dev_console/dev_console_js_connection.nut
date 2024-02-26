@@ -54,6 +54,13 @@ this.dev_console_js_connection <- ::inherit("scripts/mods/msu/js_connection", {
 		return true;
 	}
 
+	function lockElementInspector()
+	{
+		this.m.JSHandle.asyncCall("lockElementInspector", null);
+		return true;
+	}
+
+
 	function finalize()
 	{
 		this.m.JSHandle.asyncCall("finalize", null);

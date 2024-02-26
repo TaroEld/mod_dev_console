@@ -112,8 +112,18 @@ DevConsoleJSConnection.prototype.changeElementInspectorLevel = function(_int)
   	ElementInspector.changeNodeLevel(_int);
 }
 
+DevConsoleJSConnection.prototype.lockElementInspector = function()
+{
+  	ElementInspector.lockElement();
+}
+
 DevConsoleJSConnection.prototype.finalize = function(){
 	ElementInspector.State = MSU.getSettingValue(DevConsole.mModID, "ElementInspectorDefaultLevel");
+}
+
+DevConsoleJSConnection.prototype.setKeybindsDisabled = function(_val)
+{
+  	SQ.call(this.mSQHandle, "setKeybindsDisabled", _val);
 }
 
 
