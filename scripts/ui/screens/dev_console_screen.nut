@@ -172,7 +172,7 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 
 	function log( _text, _type = "message")
 	{
-		this.m.Buffer.push({Text = _text.tostring(), Type = _type})
+		this.m.Buffer.push({Text = _text == null ? "null" : _text.tostring(), Type = _type})
 		local l = this.m.Buffer.len();
 		if (l >= this.m.BufferMax * 2) {
 			this.m.Buffer = this.m.Buffer.slice(l - this.m.BufferMax, l);
