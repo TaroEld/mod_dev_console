@@ -251,7 +251,7 @@ DevConsoleScreen.prototype.processQueue = function()
 {
 	var self = this;
 	this.mMessageQueue.forEach(function(_message){
-		if (self.mOutputScrollContainer == null || _message.Text === null || typeof(_message.Text) != 'string')
+		if (self.mOutputScrollContainer == null || _message.Text === null)
 			return
 		_message.Text = String(_message.Text);
 	    var entry = self.createEventLogEntryDIV(_message.Text, _message.Type);
