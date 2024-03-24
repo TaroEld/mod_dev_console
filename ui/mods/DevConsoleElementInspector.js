@@ -48,10 +48,13 @@ ElementInspector.prototype.toggleState = function()
 	{
 		this.Input.show();
 		this.Input.prop('disabled', false);
-		this.Input.focus();
 		this.Input.keypress(function (e) {
 			e.stopPropagation();
 		    if (e.which == 13) {
+		    	self.Input.css("outline", "2px solid green");
+		    	setTimeout(function(){
+		    		self.Input.css("outline", "1px solid white");
+		    	},500);
 		       self.setClass(self.Input.val())
 		    }
 		});
