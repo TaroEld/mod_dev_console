@@ -1,35 +1,35 @@
 ::DevConsole.Mod.Keybinds.addSQKeybind("toggleDevConsoleScreen", "ctrl+g", ::MSU.Key.State.All,  ::DevConsole.Screen.toggle.bindenv( ::DevConsole.Screen),
-	"Toggle Screen", null, "Toggles between half-screen, fullscreen and hidden.");
+	"Toggle Screen", null, "Toggles between half-screen, fullscreen and hidden.").setBypassInputDenied(true);
 ::DevConsole.Mod.Keybinds.addSQKeybind("closeDevConsoleScreen", "escape", ::MSU.Key.State.All,  ::DevConsole.Screen.hide.bindenv( ::DevConsole.Screen)
-	"Close Screen");
+	"Close Screen").setBypassInputDenied(true);
 
 ::DevConsole.Mod.Keybinds.addJSKeybind("RunCommandInConsole", "shift+return", "Run in console", "Runs the command without closing the console.");
 ::DevConsole.Mod.Keybinds.addJSKeybind("RunCommand", "shift+ctrl+return", "Run", "Closes the console and then runs the command.");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("onUpPressedDevConsoleScreen", "ctrl+up", ::MSU.Key.State.All, ::DevConsole.Screen.onUpArrowPressed.bindenv( ::DevConsole.Screen)
-	"Previous command", null, "Switches to the previous command and environment.");
+	"Previous command", null, "Switches to the previous command and environment.").setBypassInputDenied(true);
 ::DevConsole.Mod.Keybinds.addSQKeybind("onDownPressedDevConsoleScreen", "ctrl+down",  ::MSU.Key.State.All, ::DevConsole.Screen.onDownArrowPressed.bindenv( ::DevConsole.Screen)
-	"Next command", null, "Switches to the next command and environment.");
+	"Next command", null, "Switches to the next command and environment.").setBypassInputDenied(true);
 ::DevConsole.Mod.Keybinds.addSQKeybind("onSpawnUnitDevConsoleScreen", "ctrl+z", ::MSU.Key.State.Tactical, ::DevConsole.Screen.onSpawnUnitPressed.bindenv( ::DevConsole.Screen)
 	"Spawn Unit", null, "Spawns the unit designated with ::setSpawn()");
 
-::DevConsole.Mod.Keybinds.addSQKeybind("reloadCSS", "ctrl+shift+c", ::MSU.Key.State.All,  ::reloadCSS, "Reload CSS", null, "Reloads all CSS files.");
-::DevConsole.Mod.Keybinds.addSQKeybind("reloadJS", "ctrl+shift+j", ::MSU.Key.State.All,  ::reloadJS, "Reload JS", null, "Reloads all JS files.");
+::DevConsole.Mod.Keybinds.addSQKeybind("reloadCSS", "ctrl+shift+c", ::MSU.Key.State.All,  ::reloadCSS, "Reload CSS", null, "Reloads all CSS files.").setBypassInputDenied(true);
+::DevConsole.Mod.Keybinds.addSQKeybind("reloadJS", "ctrl+shift+j", ::MSU.Key.State.All,  ::reloadJS, "Reload JS", null, "Reloads all JS files.").setBypassInputDenied(true);
 
 ::DevConsole.Mod.Keybinds.addDivider("inspectorDivider");
 ::DevConsole.Mod.Keybinds.addTitle("inspector", "Element Inspector");
 ::DevConsole.Mod.Keybinds.addSQKeybind("toggleElementInspectorState", "ctrl+i", ::MSU.Key.State.All,
-	::DevConsole.JSConnection.toggleElementInspectorState.bindenv( ::DevConsole.JSConnection), "Toggle State", null, "Toggles the state of the element inspector.");
+	::DevConsole.JSConnection.toggleElementInspectorState.bindenv( ::DevConsole.JSConnection), "Toggle State", null, "Toggles the state of the element inspector.").setBypassInputDenied(true);
 ::DevConsole.Mod.Keybinds.addSQKeybind("lockElementInspector", "ctrl+l", ::MSU.Key.State.All,
-	::DevConsole.JSConnection.lockElementInspector.bindenv( ::DevConsole.JSConnection), "Lock Element", null, "Lock the currently selected element.");
+	::DevConsole.JSConnection.lockElementInspector.bindenv( ::DevConsole.JSConnection), "Lock Element", null, "Lock the currently selected element.").setBypassInputDenied(true);
 ::DevConsole.Mod.Keybinds.addSQKeybind("increaseElementInspectorLevel", "ctrl+up", ::MSU.Key.State.All,
 	function(){
 		return ::DevConsole.JSConnection.changeElementInspectorLevel(1);
-	} , "Increase Level", null, "Increases the DOM node level of the element inspector. It will go up one parent node of the hovered element for each level.");
+	} , "Increase Level", null, "Increases the DOM node level of the element inspector. It will go up one parent node of the hovered element for each level.").setBypassInputDenied(true);
 ::DevConsole.Mod.Keybinds.addSQKeybind("decreaseElementInspectorLevel", "ctrl+down", ::MSU.Key.State.All,
 	function(){
 		return ::DevConsole.JSConnection.changeElementInspectorLevel(-1);
-	}, "Decrease Level", null, "Decreases the DOM node level of the element inspector.");
+	}, "Decrease Level", null, "Decreases the DOM node level of the element inspector.").setBypassInputDenied(true);
 
 local function canExecuteBind()
 {
