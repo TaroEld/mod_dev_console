@@ -1,5 +1,6 @@
 ## Dev Console
 A mod that aims to improve the modding experience by providing an ingame console, as well as a number of utilities.
+Github repo: https://github.com/TaroEld/mod_dev_console
 
 # How to install
 Just copy the .zip into your data folder. This mod requires MSU. If you don't want the MSU requirement, there's an older version available on Nexus.
@@ -11,7 +12,8 @@ The console can be shown in any state by pressing ctrl+g. It toggles between hal
 The console screen three main elements: a textarea to enter commands, an output window, and a footer bar.\
 In the textarea, you can enter any valid Squirrel or JavaScript syntax. The default language is Squirrel. To switch to JS, press the "Squirrel" footer button.\
 You can run the command in two ways: while staying in the console window ("Run in console" or shift+enter), or after closing the console window ("Run" or shift+ctrl+enter). The latter can be necessary in some cases, for example to invoke events.\
-The commands are evaluated using `compilestring(_input).call(this);` in SQ and `Function(_input)()` in JS.
+The commands are evaluated using `compilestring(_input).call(this);` in SQ and `Function(_input)()` in JS.\
+As these inputs are executed as functions, you will need to return a value if you want to print it (or use ::logInfo() or console.error(), of course): return 1+2;
 
 ## Logging
 The currently executed command, as well as any return values, are printed to the console.\
@@ -37,7 +39,12 @@ The default state can be set via modsetting.
 #### Node Level
 Often, it's useful to be able to look at an element that is below the current one. This is the `Node Level` value.  
 The Node Level can be changed via `ctrl` + `up` | `down`. (modsetting keybind).  
- 
+#### Changing CSS values and locking elements
+You can change CSS values by typing in the input field at the top left. To get there without losing track of your current element, either use tab to focus it, or press ctrl+l (L) to "lock" the current element, so that it doesn't change when you move the cursor. To change css values, first write the class, then the new value, without any extra characters like you would in JS or something: width 10px instead of width: "10px". You can also have multiple values: border 10px solid black.
+
+## CSS/JS hot reloading
+Press ctrl+shift+c to reload CSS files, ctrl+shift+j to reload JS files. The former can be very useful if you are working on UI, although sometimes the re-layouting breaks and you will need to restart the game anyways. The latter tends to be situational, as generally everything breaks. But maybe you have some constant values that you want to refresh.
+To make this work, you will of course update the .zip folders of your mod. I use my (bbbuilder)[https://github.com/TaroEld/BBbuilder] application with "Update mod" to quickly refresh the file.
 
 
 ## Utility Functions
