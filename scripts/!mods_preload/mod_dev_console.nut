@@ -4,7 +4,7 @@
 	Name = "Dev Console",
 }
 ::mods_registerMod(::DevConsole.ID, ::DevConsole.Version);
-::mods_queue(::DevConsole.ID, "mod_msu", function()
+::mods_queue(::DevConsole.ID, "mod_msu(>=1.3.0)", function()
 {	
 	::DevConsole.Mod <- ::MSU.Class.Mod(::DevConsole.ID, ::DevConsole.Version, ::DevConsole.Name);
 	::Const.AI.ParallelizationMode = false;
