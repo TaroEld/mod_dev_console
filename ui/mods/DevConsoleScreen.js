@@ -14,8 +14,6 @@ var DevConsoleScreen = function(_parent)
     this.mOutputContainer = null;
     this.mOutputScrollContainer = null;
 
-    this.mLatestCommandArray = [];
-    this.mLatestCommandIndex = 0;
     this.mEnvironment = DevConsole.Environments.Squirrel;
 
     // constants
@@ -294,37 +292,16 @@ DevConsoleScreen.prototype.clearConsole = function()
     this.adjustDivHeights();
 }
 
-DevConsoleScreen.prototype.addPreviousCommand = function (_command)
-{
-    this.mLatestCommandArray.splice(0, 0, [_command, this.mEnvironment])
-    if (this.mLatestCommandArray.length > 10)
-    	this.mLatestCommandArray.pop()
-};
-
 DevConsoleScreen.prototype.changeLatestInput = function (_data)
 {
-    var currentLen = this.mLatestCommandArray.length
-    var previousLen = this.mLatestCommandIndex
-    var nextLen = previousLen + _data
-    if(nextLen < 0) nextLen = 0;
-    if(nextLen > 10) nextLen = 10;
-    if(nextLen == currentLen) nextLen -= 1;
-    this.mLatestCommandIndex = nextLen;
-    this.mInputContainer.val(this.mLatestCommandArray[nextLen][0]);
-    this.setEnvironment(this.mLatestCommandArray[nextLen][1])
+    this.mInputContainer.val(_data.command);
+    this.setEnvironment(_data.environment);
     return true
 }
-
-DevConsoleScreen.prototype.setPreviousCommands = function (_data)
-{
-    this.mLatestCommandArray = _data;
-    this.mLatestCommandIndex = 0;
-};
 
 DevConsoleScreen.prototype.checkRunCommand = function (_inConsole)
 {
     var command = this.mInputContainer.getInputText();
-    this.addPreviousCommand(command);
     SQ.call(this.mSQHandle, 'addPreviousCommand', [command, this.mEnvironment]);
     if ( !_inConsole)
     {

@@ -1,7 +1,9 @@
 this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
+	MAX_COMMAND_HISTORY = 100,
 	m = {
 		ID = "DevConsoleScreen",
 		PreviousCommands = [],
+		PreviousCommandIndex = 0,
 		SpawnUnit = {
 			SpawnUnitScript = "",
 			SpawnUnitFaction = this.Const.Faction.Enemy
@@ -100,8 +102,8 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	{
 		if (this.m.JSHandle != null && this.isVisible())
 		{
-			this.m.JSHandle.asyncCall("changeLatestInput", 1);
-			return true
+			this.changeLatestInput(1);
+			return true;
 		}
 	}
 
@@ -109,9 +111,29 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	{
 		if (this.m.JSHandle != null && this.isVisible())
 		{
-			this.m.JSHandle.asyncCall("changeLatestInput", -1);
-			return true
+			this.changeLatestInput(-1);
+			return true;
 		}
+	}
+
+	function changeLatestInput(_int)
+	{
+	    local currentLen = this.m.PreviousCommands.len();
+	    local previousLen = this.m.PreviousCommandIndex;
+	    local nextLen = previousLen + _int;
+	    if (nextLen < 0)
+	    	nextLen = 0;
+	    if (nextLen > this.MAX_COMMAND_HISTORY)
+	    	nextLen = this.MAX_COMMAND_HISTORY;
+	    if (nextLen == currentLen)
+	    	nextLen -= 1;
+	    this.m.PreviousCommandIndex = nextLen;
+	    local command = this.m.PreviousCommands[nextLen][0];
+	    local environment = this.m.PreviousCommands[nextLen][1];
+	    this.m.JSHandle.asyncCall("changeLatestInput", {
+	    	command = command,
+	    	environment = environment
+	    });
 	}
 
 	function onSpawnUnitPressed()
@@ -195,9 +217,16 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 
 	function addPreviousCommand(_data)
 	{
+		if (this.m.PreviousCommands.len() > 0
+			&& this.m.PreviousCommands[this.m.PreviousCommandIndex][0] == _data[0]
+			&& this.m.PreviousCommands[this.m.PreviousCommandIndex][1] == _data[1]
+		) {
+			return;
+		}
 		this.m.PreviousCommands.insert(0, _data);
-		if (this.m.PreviousCommands.len() > 10)
+		if (this.m.PreviousCommands.len() > this.MAX_COMMAND_HISTORY)
 			this.m.PreviousCommands.pop();
+		this.m.PreviousCommandIndex = 0;
 	}
 
 	function updatePreviousCommands()
@@ -217,10 +246,6 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		{
 			this.addPreviousCommand(commands[i]);
 		}
-		if (this.m.JSHandle != null)
-		{
-			this.m.JSHandle.asyncCall("setPreviousCommands", this.m.PreviousCommands);
-		}
 	}
 
 	function checkRunCommandInConsole()
@@ -234,6 +259,16 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		{
 			this.m.JSHandle.asyncCall("checkRunCommand", _bool);
 			return true;
+		}
+	}
+
+	function printCommands(_idx)
+	{
+		::logInfo("-----")
+		foreach(idx, entry in this.m.PreviousCommands)
+		{
+			local idxStr = (idx == _idx) ? "* " + idx : idx;
+			::logInfo(idxStr + " : " + entry[0]);
 		}
 	}
 });
