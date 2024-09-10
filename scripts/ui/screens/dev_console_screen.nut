@@ -157,6 +157,7 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 
 		this.updatePreviousCommands()
 
+		local logOptions = this.mergeOptions({ParseHTML=false, Type="system"});
 		//remove ominous ctrl character
 		local ctrl = ""
 		if (cmd.find(ctrl) != null)
@@ -164,8 +165,7 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			cmd = split(cmd, ctrl).reduce(@(a,b) a+b)
 		}
 
-		::logInfo("Command: " + cmd)
-		::logInfo("Start Command-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
+		::logInfo("Command: " + cmd, logOptions)
 
 		local compiledScript, output;
 		try {
@@ -173,7 +173,7 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		}
 		catch(exception)
 		{
-			::logError("Failed to compile command, Error: "  + exception)
+			::logError("Failed to compile command, Error: "  + exception, logOptions)
 		}
 
 		if (compiledScript != null)
@@ -184,15 +184,13 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			}
 			catch (exception)
 			{
-				::logError("Failed to run command, Error: " + exception)
+				::logError("Failed to run command, Error: " + exception, logOptions)
 			}
-			::logInfo("Output: " + ::MSU.Log.getLocalString(output, 10, 2, true, true));
+			::logInfo("Output: " + ::MSU.Log.getLocalString(output, 10, 2, true, true), logOptions);
 		}
-
-		::logInfo("-------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
 	}
 
-	function log( _text, _type = "message")
+	function log( _text, _options)
 	{
 		if (_text == null) _text = "null";
 		else {
@@ -202,7 +200,7 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			}
 			catch (error){}
 		}
-		this.m.Buffer.push({Text = _text, Type = _type})
+		this.m.Buffer.push({Text = _text, Environment = 0, Type = _options.Type, Options = _options})
 		local l = this.m.Buffer.len();
 		if (l >= this.m.BufferMax * 2) {
 			this.m.Buffer = this.m.Buffer.slice(l - this.m.BufferMax, l);
@@ -270,6 +268,21 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			local idxStr = (idx == _idx) ? "* " + idx : idx;
 			::logInfo(idxStr + " : " + entry[0]);
 		}
+	}
+
+	function mergeOptions(_options)
+	{
+		local defaultOptions = {
+			Dev = true,
+			Type = "message",
+			ParseHTML = true,
+		}
+		if (_options == null)
+			return defaultOptions;
+		foreach(key, value in _options){
+			defaultOptions[key] = value;
+		}
+		return defaultOptions;
 	}
 });
 

@@ -12,9 +12,10 @@
 }
 
 //library of useful functions
-::logConsole <- function(_text = "", _type = "message")
+::logConsole <- function(_text = "", _options = null)
 {
-	this.DevConsole.Screen.log(_text, _type);
+	local options = ::DevConsole.Screen.mergeOptions(_options);
+	::DevConsole.Screen.log(_text, options);
 }
 
 //add item to player roster, pass the script

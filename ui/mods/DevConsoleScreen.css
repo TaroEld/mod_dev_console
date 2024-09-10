@@ -74,9 +74,16 @@
 	-webkit-user-select: text !important;
 	user-select: text !important;
     pointer-events: auto !important;
+    display: flex;
 }
-
-
+.devconsole-log-entry-meta
+{
+	width:4%;
+}
+.devconsole-log-entry-text
+{
+	width:96%;
+}
 .dev-console-dialog .dev-console-footer
 {
     width: 100%;

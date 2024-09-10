@@ -6,9 +6,13 @@ var DevConsole = {
 	},
 }
 
-var logConsole = function(_args)
+var logConsole = function(_args, _options)
 {
 	console.error.call(console, _args);
 	if (Screens.DevConsoleScreen)
-		Screens.DevConsoleScreen.log({Text : _args, Type : "error"})
+	{
+		var options = Screens.DevConsoleScreen.mergeOptions(_options);
+		if (options.Dev)
+			Screens.DevConsoleScreen.log({Text : _args, Type : options.Type, Environment : DevConsole.Environments.JS, Options : options})
+	}
 }

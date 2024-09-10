@@ -24,6 +24,7 @@ var DevConsoleScreen = function(_parent)
     	message : null,
     	warning : null,
     	error : null,
+    	system : null,
     }
 }
 
@@ -228,6 +229,7 @@ DevConsoleScreen.prototype.updateColorSettings = function ()
 		message : MSU.getSettingValue(this.mModID, "message"),
 		warning : MSU.getSettingValue(this.mModID, "warning"),
 		error : MSU.getSettingValue(this.mModID, "error"),
+		system : MSU.getSettingValue(this.mModID, "system"),
 	}
 	if (this.mOutputContainer != null)
 	{
@@ -252,7 +254,7 @@ DevConsoleScreen.prototype.processQueue = function()
 		if (self.mOutputScrollContainer == null || _message.Text === null)
 			return
 		_message.Text = String(_message.Text);
-	    var entry = self.createEventLogEntryDIV(_message.Text, _message.Type);
+	    var entry = self.createEventLogEntryDIV(_message);
 	    if (self.mOutputScrollContainer.children().length > self.mMaxVisibleEntries)
 	    {
 	        var firstDiv = self.mOutputScrollContainer.children(':first');
@@ -267,21 +269,44 @@ DevConsoleScreen.prototype.processQueue = function()
 	this.scrollToBottom();
 }
 
-DevConsoleScreen.prototype.createEventLogEntryDIV = function (_text, _type)
+DevConsoleScreen.prototype.createEventLogEntryDIV = function (_message)
 {
     var entry = $('<div class="log-entry text-font-small"></div>');
-    entry.data("type", _type);
-    entry.css("color", "rgba(" + this.mColors[_type] + ")");
-    // var parsedText = XBBCODE.process({
-    //     text: _text,
-    //     removeMisalignedTags: false,
-    //     addInLineBreaks: true
-    // });
+    entry.data("type", _message.Type);
+    entry.css("color", "rgba(" + this.mColors[_message.Type] + ")");
+    var leftColumn = $('<span class="devconsole-log-entry-meta"></span>').appendTo(entry);
+    leftColumn.append(this.getEnvAndTimeStamp(_message));
+    var rightColumn = $('<span class="devconsole-log-entry-text"></span>').appendTo(entry);
+    var text = _message.Text
+    if (_message.Options != null && _message.Options.ParseHTML === false)
+    {
+    	rightColumn.text(text);
+    }
+    else
+    {
+    	// var parsedText = XBBCODE.process({
+    	//     text: text,
+    	//     removeMisalignedTags: false,
+    	//     addInLineBreaks: true
+    	// });
 
-    // entry.html(parsedText.html);
-    entry.text(_text);
+    	rightColumn.html(text);
+    }
     return entry;
 };
+
+DevConsoleScreen.prototype.getEnvAndTimeStamp = function(_message)
+{
+	var text = $("<span/>");
+	var envText = _message.Environment == DevConsole.Environments.Squirrel ? "<span class='font-color-brother-name'> SQ:</span>" : "<span class='font-color-JS'> JS:</span>";
+	var d = new Date()
+
+	var hours = d.getHours();
+	var minutes = d.getMinutes();
+	var seconds = d.getSeconds();
+	text.html((hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes)  + ":" + (seconds < 10 ? "0" + seconds : seconds)  + " " + envText);
+	return text
+}
 
 DevConsoleScreen.prototype.clearConsole = function()
 {
@@ -319,25 +344,21 @@ DevConsoleScreen.prototype.checkRunCommand = function (_inConsole)
 
 DevConsoleScreen.prototype.runCommandInJs = function (command)
 {
+	var logOptions = this.mergeOptions({ParseHTML:false, Type:"system"});
 	command = command.replace(/[\u0127]/g, '');
 	command = command.replace(/\u0127/g, '');
 	command = command.replace("", '');
 	command = command.replace(//g, '');
 
 
-	logConsole("Command: " + String(command));
-	logConsole("Start Command -------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
+	logConsole("Command: " + String(command), logOptions);
 	try{
 	    var ret = Function(command)();
-	    if (ret !== undefined && ret !== null)
-	    {
-	    	logConsole("Output: " + ret);
-	    }
+	    logConsole("Output: " + ret, logOptions);
 	}
 	catch(err){
-		logConsole("Error in command:\n" + err)
+		logConsole("Error in command:\n" + err, logOptions)
 	}
-   logConsole("End Command ----------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
 };
 
 DevConsoleScreen.prototype.adjustDivHeights = function ()
@@ -385,6 +406,23 @@ DevConsoleScreen.prototype.notifyBackendHide = function()
     {
         SQ.call(this.mSQHandle, 'hide');
     }
+}
+
+
+DevConsoleScreen.prototype.mergeOptions = function(_options)
+{
+	var defaultOptions = {
+		Dev : true,
+		Type : "message",
+		ParseHTML : true,
+	}
+	if (_options == null || _options == undefined)
+		return defaultOptions;
+	$.each(_options, function(key, value){
+		if (!(key in defaultOptions)) throw new Error('Unknown log parameter: ' + key);
+		defaultOptions[key] = value;
+	})
+	return defaultOptions;
 }
 
  $.fn.mod_createInput = function(_text, _minLength, _maxLength, _tabIndex, _inputUpdatedCallback)
