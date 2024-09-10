@@ -1,6 +1,6 @@
 ::DevConsole <- {
 	ID = "mod_dev_console",
-	Version = "2.2.1",
+	Version = "2.3.0",
 	Name = "Dev Console",
 }
 ::mods_registerMod(::DevConsole.ID, ::DevConsole.Version);
