@@ -40,6 +40,15 @@ DevConsoleJSConnection.prototype.reloadCSS = function(_path)
 	{
 		logConsole("Did not find CSS file with path " + _path)
 	}
+	else
+	{
+		var notif = $("<span>Reloaded CSS</span>");
+		notif.addClass('devconsole-reload-notification');
+		$(document.body).append(notif)
+		setTimeout(function(){
+				notif.remove();
+			}, 1500);
+	}
 };
 
 DevConsoleJSConnection.prototype.reloadJS = function(_path)

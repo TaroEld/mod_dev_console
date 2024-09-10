@@ -182,3 +182,16 @@
 {
 	outline: 2px solid red;
 }
+
+.devconsole-reload-notification
+{
+	z-index: 99999;
+	width: 20rem;
+	height:5rem;
+	background-color: black;
+	color:white;
+	font-size: 3rem;
+	position: absolute;
+	left:0;
+	top:0;
+}
