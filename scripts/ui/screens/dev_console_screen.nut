@@ -213,7 +213,7 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		return buffer;
 	}
 
-	function addPreviousCommand(_data)
+	function addPreviousCommand(_data, _update = true)
 	{
 		if (this.m.PreviousCommands.len() > 0
 			&& this.m.PreviousCommands[this.m.PreviousCommandIndex][0] == _data[0]
@@ -225,6 +225,7 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		if (this.m.PreviousCommands.len() > this.MAX_COMMAND_HISTORY)
 			this.m.PreviousCommands.pop();
 		this.m.PreviousCommandIndex = 0;
+		if (_update) updatePreviousCommands();
 	}
 
 	function updatePreviousCommands()
@@ -242,7 +243,7 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		local commands = ::DevConsole.Mod.PersistentData.readFile("PreviousCommands");
 		for (local i = commands.len() - 1; i != -1; i--)
 		{
-			this.addPreviousCommand(commands[i]);
+			this.addPreviousCommand(commands[i], false);
 		}
 	}
 
