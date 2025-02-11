@@ -16,7 +16,6 @@
 		::DevConsole.Mod.Registry.setUpdateSource(::MSU.System.Registry.ModSourceDomain.GitHubTags);
 	}
 
-	::Const.AI.ParallelizationMode = false;
 	::include("dev_console/dev_console_js_connection");
 	::include("dev_console/dev_console_utils");
 	::mods_registerJS("DevConsoleUtils.js");
