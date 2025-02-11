@@ -190,3 +190,7 @@ $(document.body).on("mousemove.devconsole", function (ev) {
 $(document.body).on("mouseover.devconsole", function (ev) {
 	return ElementInspector.inspectElement(ev.target);
 })
+
+DevConsole.getInspectedElement = function(){
+	return ElementInspector.LastElement;
+}
