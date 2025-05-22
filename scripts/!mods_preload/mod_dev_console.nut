@@ -9,12 +9,8 @@
 	::DevConsole.Mod <- ::MSU.Class.Mod(::DevConsole.ID, ::DevConsole.Version, ::DevConsole.Name);
 
 	::DevConsole.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.NexusMods, "https://www.nexusmods.com/battlebrothers/mods/380");
-	// upcoming MSU feature
-	if ("GitHubTags" in ::MSU.System.Registry.ModSourceDomain)
-	{
-		::DevConsole.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.GitHubTags, "https://github.com/TaroEld/mod_dev_console");
-		::DevConsole.Mod.Registry.setUpdateSource(::MSU.System.Registry.ModSourceDomain.GitHubTags);
-	}
+	::DevConsole.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.GitHubTags, "https://github.com/TaroEld/mod_dev_console/");
+	::DevConsole.Mod.Registry.setUpdateSource(::MSU.System.Registry.ModSourceDomain.GitHubTags);
 
 	::include("dev_console/dev_console_js_connection");
 	::include("dev_console/dev_console_utils");
