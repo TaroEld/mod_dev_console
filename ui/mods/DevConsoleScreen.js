@@ -392,6 +392,11 @@ DevConsoleScreen.prototype.scrollToBottom = function()
 	return true;
 }
 
+DevConsoleScreen.prototype.onHide = function()
+{
+	this.mInputContainer.blur();
+}
+
 DevConsoleScreen.prototype.notifyBackendRunCommand = function(_command)
 {
     if (this.mSQHandle !== null)
