@@ -26,19 +26,21 @@ this.dev_console_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		{
 			case "tactical_state":
 				::DevConsole.Mod.Debug.printWarning("Show in tactical")
+				local previousPauseState = activeState.m.IsGamePaused;
 				activeState.setPause(true);
 				activeState.m.MenuStack.push(function ()
 				{
-					this.setPause(false);
+					this.setPause(previousPauseState);
 				});
 				break;
 
 			case "world_state":
 				::DevConsole.Mod.Debug.printWarning("Show in world")
+				local previousPauseState = activeState.m.IsGameAutoPaused;
 				activeState.setAutoPause(true);
 				activeState.m.MenuStack.push(function ()
 				{
-					this.setAutoPause(false);
+					this.setAutoPause(previousPauseState);
 				});
 				break;
 
