@@ -10,7 +10,8 @@
 
 	::DevConsole.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.NexusMods, "https://www.nexusmods.com/battlebrothers/mods/380");
 	::DevConsole.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.GitHubTags, "https://github.com/TaroEld/mod_dev_console/");
-	::DevConsole.Mod.Registry.setUpdateSource(::MSU.System.Registry.ModSourceDomain.GitHubTags);
+	::DevConsole.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.GitHub, "https://github.com/TaroEld/mod_dev_console");
+	::DevConsole.Mod.Registry.setUpdateSource(::MSU.System.Registry.ModSourceDomain.GitHub);
 
 	::include("dev_console/dev_console_js_connection");
 	::include("dev_console/dev_console_utils");
