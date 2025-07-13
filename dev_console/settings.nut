@@ -1,5 +1,10 @@
 local generalPage = ::DevConsole.Mod.ModSettings.addPage("General");
-generalPage.addBooleanSetting("EnableDebugKeybinds", false, "Enable debug keybinds", "Enables debug keybinds.");
+generalPage.addBooleanSetting("EnableDebugKeybinds", false, "Enable debug keybinds", "Enables debug keybinds.")
+	.addAfterChangeCallback(function(_oldState)
+	{
+		::DevConsole.JSConnection.updateGlobalDebugState(this.getValue());
+	});
+
 generalPage.addBooleanSetting("PrintForParser", false, "Print for Parser", "Prints all lines to the log to be parsed.");
 
 local colorCallback = function(_){

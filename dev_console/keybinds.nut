@@ -49,7 +49,7 @@ local function canExecuteBind()
 	  local tilePos = this.m.LastTileHovered.Pos;
 	  this.World.State.getPlayer().setPos(tilePos);
 	  this.World.setPlayerPos(tilePos);
-	  ::logConsole("Debug: Jumped to: X:" + tilePos.X + " Y:" + tilePos.Y);
+	  ::DevConsole.JSConnection.addDebugInfo("Jumped to: X:" + tilePos.X + " Y:" + tilePos.Y);
 	}
 }, "Jump");
 
@@ -57,28 +57,31 @@ local function canExecuteBind()
 	if (!canExecuteBind())
 		return;
 	this.World.setFogOfWar(!this.World.isUsingFogOfWar());
-	::logConsole("Debug: Fog of War: " + this.World.isUsingFogOfWar());
+	::DevConsole.JSConnection.addDebugInfo("Fog of War: " + this.World.isUsingFogOfWar());
+	::DevConsole.JSConnection.updateRowDebugState("WorldFoW", !this.World.isUsingFogOfWar());
 }, "Reveal Map");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldGlory", "g", ::MSU.Key.State.World, function(){
 	if (!canExecuteBind())
 		return;
 	this.World.Assets.addBusinessReputation(500);
-	::logConsole("Debug: Added 500 renown");
+	::DevConsole.JSConnection.addDebugInfo("Added 500 renown");
 }, "Add 500 renown");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldHunger", "h", ::MSU.Key.State.World, function(){
 	if (!canExecuteBind())
 		return;
 	this.World.Assets.setConsumingAssets(!this.World.Assets.isConsumingAssets());
-	::logConsole("Debug: Consuming assets: " + this.World.Assets.isConsumingAssets());
+	::DevConsole.JSConnection.addDebugInfo("Consuming assets: " + this.World.Assets.isConsumingAssets());
+	::DevConsole.JSConnection.updateRowDebugState("Hunger", !this.World.Assets.isConsumingAssets());
 }, "Enable/Disable asset consumption");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldEvents", "ctrl+shift+e", ::MSU.Key.State.World, function(){
 	if (!canExecuteBind())
 		return;
 	::DevConsole.IsEventsEnabled = !::DevConsole.IsEventsEnabled;
-	::logConsole("Debug: Events enabled: " + ::DevConsole.IsEventsEnabled);
+	::DevConsole.JSConnection.addDebugInfo("Events enabled: " + ::DevConsole.IsEventsEnabled);
+	::DevConsole.JSConnection.updateRowDebugState("Events", !::DevConsole.IsEventsEnabled);
 }, "Enable/Disable asset consumption");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldLevel", "l", ::MSU.Key.State.World, function(){
@@ -92,7 +95,7 @@ local function canExecuteBind()
 		bro.updateLevel();
 	}
 	::World.State.m.CharacterScreen.loadBrothersList();
-	::logConsole("Debug: Added 1 level to each bro");
+	::DevConsole.JSConnection.addDebugInfo("Added 1 level to each bro");
 }, "Level Bros");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldKill", "k", ::MSU.Key.State.World, function(){
@@ -127,7 +130,7 @@ local function canExecuteBind()
 		e.onCombatLost();
 	}
 	if (destroyedString != "")
-		::logConsole("Debug: Destroyed: " + destroyedString);
+		::DevConsole.JSConnection.addDebugInfo("Destroyed: " + destroyedString);
 }, "Kill Hovered Entity");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldRelations", "l", ::MSU.Key.State.World, function(){
@@ -142,7 +145,7 @@ local function canExecuteBind()
 	{
 	  foreach(faction in factions) {faction.addPlayerRelation(10, "Debug Mode");}
 	}
-	::logConsole("Debug: Added 10 relation to each faction");
+	::DevConsole.JSConnection.addDebugInfo("Added 10 relation to each faction");
 }, "Add 10 relations to each faction");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldMoney", "m", ::MSU.Key.State.World, function(){
@@ -150,14 +153,15 @@ local function canExecuteBind()
 		return;
 	this.World.Assets.addMoney(10000);
 	::World.State.updateTopbarAssets();
-	::logConsole("Debug: Added 10000 crowns");
+	::DevConsole.JSConnection.addDebugInfo("Added 10000 crowns");
 }, "Add 10000 crowns.");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldUnkillable", "u", ::MSU.Key.State.World, function(){
 	if (!canExecuteBind())
 		return;
 	::World.State.m.Player.setAttackable(!::World.State.m.Player.isAttackable());
-	::logConsole("Debug: Player attackable: " + ::World.State.m.Player.isAttackable());
+	::DevConsole.JSConnection.addDebugInfo("Player attackable: " + ::World.State.m.Player.isAttackable());
+	::DevConsole.JSConnection.updateRowDebugState("Attackable", !::World.State.m.Player.isAttackable());
 }, "Toggle player being attackable.");
 
 local function setWorldSpeedMult(_speed)
@@ -166,7 +170,7 @@ local function setWorldSpeedMult(_speed)
 		return false;
 	this.setPause(false);
 	this.World.setSpeedMult(_speed);
-	::logConsole("Debug: Set speed mult to " + _speed);
+	::DevConsole.JSConnection.addDebugInfo("Set speed mult to " + _speed);
 	return true;
 }
 
@@ -221,7 +225,8 @@ local function setWorldSpeedMult(_speed)
 	  if (activeEntity != null) activeEntity.updateVisibilityForFaction();
 	}
 	else {this.Tactical.fillVisibility(this.Const.Faction.Player, true);}
-	::logConsole("Debug: Map revealed: " + state.m.IsFogOfWarVisible);
+	::DevConsole.JSConnection.addDebugInfo("Map revealed: " + state.m.IsFogOfWarVisible);
+	::DevConsole.JSConnection.updateRowDebugState("TacticalFoW", !state.m.IsFogOfWarVisible);
 }, "Reveal map");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalHeal", "h", ::MSU.Key.State.Tactical, function(){
@@ -248,7 +253,7 @@ local function setWorldSpeedMult(_speed)
 		  this.Tactical.TurnSequenceBar.updateEntity(actor.getID());
 		}
 	}
-	::logConsole("Debug: Healed players.");
+	::DevConsole.JSConnection.addDebugInfo("Healed players.");
 }, "Heal players");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalJump", "j", ::MSU.Key.State.Tactical, function(){
@@ -259,7 +264,7 @@ local function setWorldSpeedMult(_speed)
 	{
 	  local entity = this.Tactical.TurnSequenceBar.getActiveEntity();
 	  this.Tactical.getNavigator().teleport(entity, tile, null, null, false, 0.0);
-	  ::logConsole("Debug: Entity " + entity.getName() + " jumped to: X:" + tile.Pos.X + " Y:" + tile.Pos.Y)
+	  ::DevConsole.JSConnection.addDebugInfo("Entity " + entity.getName() + " jumped to: X:" + tile.Pos.X + " Y:" + tile.Pos.Y)
 	}
 }, "Jump to tile");
 
@@ -276,7 +281,7 @@ local function setWorldSpeedMult(_speed)
 
 	if (entity == this.Tactical.TurnSequenceBar.getActiveEntity())
 		state.cancelEntityPath(entity);
-	::logConsole("Debug: Killed entity " + entity.getName());
+	::DevConsole.JSConnection.addDebugInfo("Killed entity " + entity.getName());
 	entity.kill();
 }, "Kill hovered entity.");
 
@@ -295,21 +300,21 @@ local function setWorldSpeedMult(_speed)
 			}
 		}
 	}
-	::logConsole("Debug: Killed all enemies.")
+	::DevConsole.JSConnection.addDebugInfo("Killed all enemies.")
 }, "Kill all enemy entities.");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalSpeed1", "f1", ::MSU.Key.State.Tactical, function(){
 	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(1.0);
-	::logConsole("Debug: Virtual Speed set to x1.0");
+	::DevConsole.JSConnection.addDebugInfo("Virtual Speed set to x1.0");
 }, "Tactical Speed 1.0");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("tacticalSpeed2", "f2", ::MSU.Key.State.Tactical, function(){
 	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(2.0);
-	::logConsole("Debug: Virtual Speed set to x2.0");
+	::DevConsole.JSConnection.addDebugInfo("Virtual Speed set to x2.0");
 }, "Tactical Speed 2.0");
 
 
@@ -317,7 +322,7 @@ local function setWorldSpeedMult(_speed)
 	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(3.0);
-	::logConsole("Debug: Virtual Speed set to x3.0");
+	::DevConsole.JSConnection.addDebugInfo("Virtual Speed set to x3.0");
 }, "Tactical Speed 3.0");
 
 
@@ -325,7 +330,7 @@ local function setWorldSpeedMult(_speed)
 	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(4.0);
-	::logConsole("Debug: Virtual Speed set to x4.0");
+	::DevConsole.JSConnection.addDebugInfo("Virtual Speed set to x4.0");
 }, "Tactical Speed 4.0");
 
 
@@ -333,7 +338,7 @@ local function setWorldSpeedMult(_speed)
 	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(5.0);
-	::logConsole("Debug: Virtual Speed set to x5.0");
+	::DevConsole.JSConnection.addDebugInfo("Virtual Speed set to x5.0");
 }, "Tactical Speed 5.0");
 
 
@@ -341,7 +346,7 @@ local function setWorldSpeedMult(_speed)
 	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(6.0);
-	::logConsole("Debug: Virtual Speed set to x6.0");
+	::DevConsole.JSConnection.addDebugInfo("Virtual Speed set to x6.0");
 }, "Tactical Speed 6.0");
 
 
@@ -349,7 +354,7 @@ local function setWorldSpeedMult(_speed)
 	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(7.0);
-	::logConsole("Debug: Virtual Speed set to x7.0");
+	::DevConsole.JSConnection.addDebugInfo("Virtual Speed set to x7.0");
 }, "Tactical Speed 7.0");
 
 
@@ -357,7 +362,7 @@ local function setWorldSpeedMult(_speed)
 	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(8.0);
-	::logConsole("Debug: Virtual Speed set to x8.0");
+	::DevConsole.JSConnection.addDebugInfo("Virtual Speed set to x8.0");
 }, "Tactical Speed 8.0");
 
 
@@ -365,7 +370,7 @@ local function setWorldSpeedMult(_speed)
 	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(9.0);
-	::logConsole("Debug: Virtual Speed set to x9.0");
+	::DevConsole.JSConnection.addDebugInfo("Virtual Speed set to x9.0");
 }, "Tactical Speed 9.0");
 
 
@@ -373,7 +378,7 @@ local function setWorldSpeedMult(_speed)
 	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(10.0);
-	::logConsole("Debug: Virtual Speed set to x10.0");
+	::DevConsole.JSConnection.addDebugInfo("Virtual Speed set to x10.0");
 }, "Tactical Speed 10.0");
 
 
@@ -381,5 +386,5 @@ local function setWorldSpeedMult(_speed)
 	if (!canExecuteBind())
 		return;
 	this.Time.setVirtualSpeed(11.0);
-	::logConsole("Debug: Virtual Speed set to x11.0");
+	::DevConsole.JSConnection.addDebugInfo("Virtual Speed set to x11.0");
 }, "Tactical Speed 11.0");

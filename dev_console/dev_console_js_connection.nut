@@ -66,4 +66,26 @@ this.dev_console_js_connection <- ::inherit("scripts/mods/msu/js_connection", {
 		this.m.JSHandle.asyncCall("finalize", null);
 		return true;
 	}
+
+	function updateGlobalDebugState(_newState)
+	{
+		if (this.m.JSHandle == null)
+			return
+		this.m.JSHandle.asyncCall("updateGlobalDebugState", {newState = _newState});
+	}
+
+	function updateRowDebugState(_key, _newState)
+	{
+		if (this.m.JSHandle == null)
+			return
+		this.m.JSHandle.asyncCall("updateRowDebugState", {key = _key, newState = _newState});
+	}
+
+	function addDebugInfo(_text)
+	{
+		::logConsole("Debug: " + _text);
+		if (this.m.JSHandle == null)
+			return
+		this.m.JSHandle.asyncCall("addDebugInfo", _text);
+	}
 })

@@ -1,6 +1,6 @@
 ::DevConsole <- {
 	ID = "mod_dev_console",
-	Version = "2.5.0",
+	Version = "2.6.0",
 	Name = "Dev Console",
 	IsEventsEnabled = true,
 }
@@ -18,6 +18,10 @@
 	::include("dev_console/dev_console_utils");
 	::mods_registerJS("DevConsoleUtils.js");
 	::mods_registerJS("DevConsoleElementInspector.js");
+
+	::mods_registerJS("DevConsoleDebugInfoElement.js");
+	::mods_registerCSS("DevConsoleDebugInfoElement.css");
+
 	::mods_registerJS("DevConsoleJSConnection.js");
 	::mods_registerJS("DevConsoleScreen.js");
 	::mods_registerCSS("DevConsoleScreen.css");

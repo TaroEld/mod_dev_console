@@ -3,6 +3,7 @@ var DevConsoleJSConnection = function(_parent)
     MSUBackendConnection.call(this);
     this.mModID = "mod_dev_console"
     this.mID = "DevConsoleJSConnection";
+    this.mDebugInfoElement = new DebugInfoElement();
 }
 
 DevConsoleJSConnection.prototype = Object.create(MSUBackendConnection.prototype);
@@ -12,6 +13,19 @@ Object.defineProperty(DevConsoleJSConnection.prototype, 'constructor', {
     writable: true
 });
 
+DevConsoleJSConnection.prototype.updateGlobalDebugState = function(_params)
+{
+	this.mDebugInfoElement.toggleVisible(_params.newState);
+}
+
+DevConsoleJSConnection.prototype.updateRowDebugState = function(_params)
+{
+	this.mDebugInfoElement.toggleRowState(_params.key, _params.newState);
+}
+DevConsoleJSConnection.prototype.addDebugInfo = function(_text)
+{
+	this.mDebugInfoElement.showInfoPopup(_text);
+}
 DevConsoleJSConnection.prototype.reloadCSS = function(_path)
 {
 	var self = this;
@@ -128,6 +142,7 @@ DevConsoleJSConnection.prototype.lockElementInspector = function()
 
 DevConsoleJSConnection.prototype.finalize = function(){
 	ElementInspector.State = MSU.getSettingValue(DevConsole.mModID, "ElementInspectorDefaultLevel");
+	this.updateGlobalDebugState({"newState" : MSU.getSettingValue(DevConsole.mModID, "EnableDebugKeybinds")});
 }
 
 DevConsoleJSConnection.prototype.setKeybindsDisabled = function(_val)
