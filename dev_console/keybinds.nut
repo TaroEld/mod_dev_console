@@ -74,6 +74,13 @@ local function canExecuteBind()
 	::logConsole("Debug: Consuming assets: " + this.World.Assets.isConsumingAssets());
 }, "Enable/Disable asset consumption");
 
+::DevConsole.Mod.Keybinds.addSQKeybind("worldEvents", "ctrl+shift+e", ::MSU.Key.State.World, function(){
+	if (!canExecuteBind())
+		return;
+	::DevConsole.IsEventsEnabled = !::DevConsole.IsEventsEnabled;
+	::logConsole("Debug: Events enabled: " + ::DevConsole.IsEventsEnabled);
+}, "Enable/Disable asset consumption");
+
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldLevel", "l", ::MSU.Key.State.World, function(){
 	if (!canExecuteBind())
 		return;
@@ -184,8 +191,18 @@ local function setWorldSpeedMult(_speed)
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed256", "9", ::MSU.Key.State.World, function(){
 	return setWorldSpeedMult(256.0);
 }, "World Speed 256x");
-
-
+::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed512", "0", ::MSU.Key.State.World, function(){
+	return setWorldSpeedMult(512.0);
+}, "World Speed 512x");
+::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed1024", "ctrl+0", ::MSU.Key.State.World, function(){
+	return setWorldSpeedMult(1024.0);
+}, "World Speed 1024x");
+::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed2048", "shift+0", ::MSU.Key.State.World, function(){
+	return setWorldSpeedMult(2048.0);
+}, "World Speed 2048x");
+::DevConsole.Mod.Keybinds.addSQKeybind("worldSpeed4096", "alt+0", ::MSU.Key.State.World, function(){
+	return setWorldSpeedMult(4096.0);
+}, "World Speed 4096x");
 
 ::DevConsole.Mod.Keybinds.addDivider("DebugBindsTactical");
 ::DevConsole.Mod.Keybinds.addTitle("DebugTacticalTitle", "Tactical Debug Keybinds");
