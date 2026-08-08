@@ -82,7 +82,7 @@ local function canExecuteBind()
 	::DevConsole.IsEventsEnabled = !::DevConsole.IsEventsEnabled;
 	::DevConsole.JSConnection.addDebugInfo("Events enabled: " + ::DevConsole.IsEventsEnabled);
 	::DevConsole.JSConnection.updateRowDebugState("Events", !::DevConsole.IsEventsEnabled);
-}, "Enable/Disable asset consumption");
+}, "Enable/Disable events");
 
 ::DevConsole.Mod.Keybinds.addSQKeybind("worldLevel", "l", ::MSU.Key.State.World, function(){
 	if (!canExecuteBind())
